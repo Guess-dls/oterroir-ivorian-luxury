@@ -1,13 +1,46 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, ChevronLeft, ChevronRight, Mail, Menu, Phone, ShoppingBag, Sparkles, X } from "lucide-react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { galleryImages, products, riceProducts, type ProductCategory } from "@/data/products";
+import { MediaImage } from "@/components/MediaImage";
+import { assetMap } from "@/lib/media";
+import { photosQuery, postsQuery, productsQuery, videosQuery, type DbPhoto, type DbProduct } from "@/lib/content";
+import { galleryImages, products as staticProducts, type ProductCategory } from "@/data/products";
 import heroImage from "@/assets/oterroir-hero.jpg";
 import riceImage from "@/assets/riz-collection.jpg";
 import cornImage from "@/assets/mais-violet.jpg";
 import liqueurImage from "@/assets/liqueurs.jpg";
+
+const assetKeyFor = (image: string) =>
+  image === riceImage ? "rice" : image === cornImage ? "corn" : image === liqueurImage ? "liqueur" : "hero";
+
+const fallbackProducts: DbProduct[] = staticProducts.map((product, index) => ({
+  id: product.id,
+  name: product.name,
+  category: product.category,
+  description: product.description,
+  price: product.price,
+  image_url: null,
+  asset_key: assetKeyFor(product.image),
+  image_position: product.imagePosition ?? null,
+  sort_order: index,
+  is_visible: true,
+}));
+
+const fallbackPhotos: DbPhoto[] = galleryImages.map((image, index) => ({
+  id: `static-${index}`,
+  image_url: image,
+  alt_text: ["Produits locaux ivoiriens", "Collection de riz locaux", "Maïs violet", "Liqueurs artisanales"][index] ?? "Photo O’TERROIR",
+  sort_order: index,
+  is_visible: true,
+}));
+
+function useProducts() {
+  const { data } = useQuery(productsQuery());
+  return data && data.length > 0 ? data : fallbackProducts;
+}
 
 const WHATSAPP = "2250749939267";
 const DEFAULT_MESSAGE = "Bonjour O’TERROIR by Stéphanie 👋 Je souhaite avoir des informations sur vos produits.";
