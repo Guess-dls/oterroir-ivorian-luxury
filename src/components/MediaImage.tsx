@@ -1,14 +1,14 @@
 import { useMediaUrl } from "@/lib/media";
 
 type Props = {
-  path?: string | null;
-  fallback?: string;
+  path?: string | null | undefined;
+  fallback?: string | undefined;
   alt: string;
-  className?: string;
-  objectPosition?: string | null;
-  loading?: "lazy" | "eager";
-  width?: number;
-  height?: number;
+  className?: string | undefined;
+  objectPosition?: string | null | undefined;
+  loading?: "lazy" | "eager" | undefined;
+  width?: number | undefined;
+  height?: number | undefined;
 };
 
 export function MediaImage({ path, fallback, alt, className, objectPosition, loading = "lazy", width, height }: Props) {
