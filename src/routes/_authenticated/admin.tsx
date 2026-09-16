@@ -165,7 +165,7 @@ function ProductsPanel() {
   const remove = async (product: DbProduct) => {
     if (!confirm(`Supprimer « ${product.name} » ?`)) return;
     const { error } = await supabase.from("products").delete().eq("id", product.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await removeMedia(product.image_url);
     toast.success("Produit supprimé.");
     refresh();
@@ -252,7 +252,7 @@ function PhotosPanel() {
   const remove = async (photo: DbPhoto) => {
     if (!confirm("Supprimer cette photo ?")) return;
     const { error } = await supabase.from("gallery_photos").delete().eq("id", photo.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await removeMedia(photo.image_url);
     toast.success("Photo supprimée.");
     refresh();
@@ -319,7 +319,7 @@ function VideosPanel() {
   const remove = async (video: DbVideo) => {
     if (!confirm(`Supprimer « ${video.title} » ?`)) return;
     const { error } = await supabase.from("videos").delete().eq("id", video.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await removeMedia(video.video_url);
     await removeMedia(video.thumbnail_url);
     toast.success("Vidéo supprimée.");
@@ -394,7 +394,7 @@ function PostsPanel() {
   const remove = async (post: DbPost) => {
     if (!confirm(`Supprimer « ${post.title} » ?`)) return;
     const { error } = await supabase.from("posts").delete().eq("id", post.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await removeMedia(post.image_url);
     toast.success("Publication supprimée.");
     refresh();
