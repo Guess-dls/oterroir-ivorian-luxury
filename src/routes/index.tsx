@@ -5,6 +5,7 @@ import { ArrowRight, ChevronLeft, ChevronRight, Mail, Menu, Phone, ShoppingBag, 
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { MediaImage } from "@/components/MediaImage";
+import { ChatWidget } from "@/components/ChatWidget";
 import { assetMap, useMediaUrl } from "@/lib/media";
 import { photosQuery, postsQuery, productsQuery, videosQuery, type DbPhoto, type DbProduct } from "@/lib/content";
 import { galleryImages, products as staticProducts, type ProductCategory } from "@/data/products";
@@ -205,5 +206,5 @@ function Footer() {
 }
 
 function HomePage() {
-  return <div className="overflow-x-clip"><Header /><main><Hero /><TrustBar /><Universe /><Catalogue /><RiceCollection /><PurpleCorn /><GorillaCola /><Liqueurs /><HomeMarket /><KnowHow /><Gallery /><Videos /><Posts /><Contact /></main><Footer /><a href={whatsappUrl()} target="_blank" rel="noreferrer" aria-label="Contacter O’TERROIR sur WhatsApp" className="fixed bottom-5 right-5 z-40 grid size-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-xl transition-transform hover:scale-105"><Sparkles className="size-6" /></a></div>;
+  return <div className="overflow-x-clip"><Header /><main><Hero /><TrustBar /><Universe /><Catalogue /><RiceCollection /><PurpleCorn /><GorillaCola /><Liqueurs /><HomeMarket /><KnowHow /><Gallery /><Videos /><Posts /><Contact /></main><Footer /><a href={whatsappUrl()} target="_blank" rel="noreferrer" aria-label="Contacter O’TERROIR sur WhatsApp" className="fixed bottom-5 right-5 z-40 grid size-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-xl transition-transform hover:scale-105"><Sparkles className="size-6" /></a><ChatWidget /></div>;
 }
