@@ -5,6 +5,7 @@ import { ArrowRight, ChevronLeft, ChevronRight, Mail, Menu, Phone, ShoppingBag, 
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { MediaImage } from "@/components/MediaImage";
+import { ChatWidget } from "@/components/ChatWidget";
 import { assetMap, useMediaUrl } from "@/lib/media";
 import { photosQuery, postsQuery, productsQuery, videosQuery, type DbPhoto, type DbProduct } from "@/lib/content";
 import { galleryImages, products as staticProducts, type ProductCategory } from "@/data/products";

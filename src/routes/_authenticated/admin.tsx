@@ -511,11 +511,13 @@ function AdminPage() {
             <TabsTrigger value="photos">Photos</TabsTrigger>
             <TabsTrigger value="videos">Vidéos</TabsTrigger>
             <TabsTrigger value="posts">Publications</TabsTrigger>
+            <TabsTrigger value="messages">Messages</TabsTrigger>
           </TabsList>
           <TabsContent value="produits"><ProductsPanel /></TabsContent>
           <TabsContent value="photos"><PhotosPanel /></TabsContent>
           <TabsContent value="videos"><VideosPanel /></TabsContent>
           <TabsContent value="posts"><PostsPanel /></TabsContent>
+          <TabsContent value="messages"><MessagesPanel /></TabsContent>
         </Tabs>
       </main>
     </div>
