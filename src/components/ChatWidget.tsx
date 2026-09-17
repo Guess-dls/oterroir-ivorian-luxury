@@ -99,7 +99,7 @@ export function ChatWidget() {
         type="button"
         onClick={() => setOpen((value) => !value)}
         aria-label={open ? "Fermer la discussion" : "Discuter avec O'TERROIR"}
-        className="fixed bottom-24 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl ring-1 ring-[hsl(var(--gold))]/40 transition hover:scale-105 md:bottom-28 md:right-8"
+        className="fixed bottom-24 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-border bg-card text-primary shadow-xl transition hover:scale-105 md:bottom-28 md:right-8"
       >
         {open ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
       </button>

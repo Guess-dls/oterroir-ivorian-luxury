@@ -468,7 +468,10 @@ function MessagesPanel() {
   const removeConversation = async (id: string) => {
     if (!window.confirm("Supprimer définitivement cette conversation ?")) return;
     const { error } = await supabase.from("chat_conversations").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     if (selected === id) setSelected(null);
     queryClient.invalidateQueries({ queryKey: ["chat_conversations"] });
     toast.success("Conversation supprimée");
