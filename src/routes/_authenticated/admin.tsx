@@ -23,6 +23,7 @@ import {
   type DbProduct,
   type DbVideo,
 } from "@/lib/content";
+import { conversationsQuery, conversationMessagesQuery, type ChatConversation } from "@/lib/chat";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -442,6 +443,92 @@ function PostsPanel() {
           </div>
         </EditorDialog>
       )}
+    </div>
+  );
+}
+
+function MessagesPanel() {
+  const queryClient = useQueryClient();
+  const [selected, setSelected] = useState<string | null>(null);
+  const { data: conversations = [], isLoading } = useQuery(conversationsQuery());
+  const { data: messages = [] } = useQuery(conversationMessagesQuery(selected));
+
+  const openConversation = async (conversation: ChatConversation) => {
+    setSelected(conversation.id);
+    if (!conversation.is_read) {
+      const { error } = await supabase
+        .from("chat_conversations")
+        .update({ is_read: true })
+        .eq("id", conversation.id);
+      if (error) toast.error(error.message);
+      else queryClient.invalidateQueries({ queryKey: ["chat_conversations"] });
+    }
+  };
+
+  const removeConversation = async (id: string) => {
+    if (!window.confirm("Supprimer définitivement cette conversation ?")) return;
+    const { error } = await supabase.from("chat_conversations").delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    if (selected === id) setSelected(null);
+    queryClient.invalidateQueries({ queryKey: ["chat_conversations"] });
+    toast.success("Conversation supprimée");
+  };
+
+  if (isLoading) return <div className="flex justify-center py-16"><Loader2 className="size-6 animate-spin" /></div>;
+
+  return (
+    <div className="grid gap-6 md:grid-cols-[320px_1fr]">
+      <div className="space-y-2">
+        <p className="text-sm text-muted-foreground">{conversations.length} conversation(s)</p>
+        {conversations.length === 0 && (
+          <p className="rounded-xl border border-border p-4 text-sm text-muted-foreground">
+            Aucun message pour le moment. Les messages envoyés depuis le chat du site arrivent ici.
+          </p>
+        )}
+        {conversations.map((conversation) => (
+          <div
+            key={conversation.id}
+            className={`flex items-start justify-between gap-2 rounded-xl border p-3 ${selected === conversation.id ? "border-primary bg-muted/50" : "border-border"}`}
+          >
+            <button type="button" className="flex-1 text-left" onClick={() => openConversation(conversation)}>
+              <p className="font-medium">
+                {conversation.visitor_name || "Visiteur"}
+                {!conversation.is_read && <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-[10px] uppercase text-primary-foreground">Nouveau</span>}
+              </p>
+              {conversation.visitor_contact && (
+                <p className="text-xs text-muted-foreground">{conversation.visitor_contact}</p>
+              )}
+              <p className="text-xs text-muted-foreground">
+                {new Date(conversation.last_message_at).toLocaleString("fr-FR")}
+              </p>
+            </button>
+            <Button variant="ghost" size="icon" onClick={() => removeConversation(conversation.id)}>
+              <Trash2 className="size-4" />
+            </Button>
+          </div>
+        ))}
+      </div>
+
+      <div className="rounded-xl border border-border p-4">
+        {!selected ? (
+          <p className="text-sm text-muted-foreground">Sélectionnez une conversation pour lire les messages.</p>
+        ) : (
+          <div className="space-y-3">
+            {messages.map((message) => (
+              <div key={message.id} className={message.role === "user" ? "text-left" : "text-left opacity-80"}>
+                <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                  {message.role === "user" ? "Visiteur" : "Assistant"}
+                </p>
+                <p className="whitespace-pre-wrap text-sm">{message.content}</p>
+                <p className="text-[11px] text-muted-foreground">
+                  {new Date(message.created_at).toLocaleString("fr-FR")}
+                </p>
+              </div>
+            ))}
+            {messages.length === 0 && <p className="text-sm text-muted-foreground">Conversation vide.</p>}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
