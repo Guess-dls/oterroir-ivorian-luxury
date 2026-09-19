@@ -16,31 +16,40 @@ export type Database = {
     Tables: {
       chat_conversations: {
         Row: {
+          access_token: string
           created_at: string
           id: string
+          is_archived: boolean
           is_read: boolean
           last_message_at: string
           updated_at: string
           visitor_contact: string
           visitor_name: string
+          visitor_unread: number
         }
         Insert: {
+          access_token?: string
           created_at?: string
           id?: string
+          is_archived?: boolean
           is_read?: boolean
           last_message_at?: string
           updated_at?: string
           visitor_contact?: string
           visitor_name?: string
+          visitor_unread?: number
         }
         Update: {
+          access_token?: string
           created_at?: string
           id?: string
+          is_archived?: boolean
           is_read?: boolean
           last_message_at?: string
           updated_at?: string
           visitor_contact?: string
           visitor_name?: string
+          visitor_unread?: number
         }
         Relationships: []
       }
@@ -83,6 +92,7 @@ export type Database = {
           id: string
           image_url: string
           is_visible: boolean
+          product_id: string | null
           sort_order: number
           updated_at: string
         }
@@ -92,6 +102,7 @@ export type Database = {
           id?: string
           image_url: string
           is_visible?: boolean
+          product_id?: string | null
           sort_order?: number
           updated_at?: string
         }
@@ -101,10 +112,19 @@ export type Database = {
           id?: string
           image_url?: string
           is_visible?: boolean
+          product_id?: string | null
           sort_order?: number
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "gallery_photos_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       posts: {
         Row: {
