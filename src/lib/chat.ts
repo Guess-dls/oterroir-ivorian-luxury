@@ -6,6 +6,8 @@ export type ChatConversation = {
   visitor_name: string;
   visitor_contact: string;
   is_read: boolean;
+  is_archived: boolean;
+  visitor_unread: number;
   last_message_at: string;
   created_at: string;
 };
@@ -13,7 +15,7 @@ export type ChatConversation = {
 export type ChatMessageRow = {
   id: string;
   conversation_id: string;
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "admin";
   content: string;
   created_at: string;
 };
@@ -24,7 +26,7 @@ export const conversationsQuery = () =>
     queryFn: async (): Promise<ChatConversation[]> => {
       const { data, error } = await supabase
         .from("chat_conversations")
-        .select("*")
+        .select("id, visitor_name, visitor_contact, is_read, is_archived, visitor_unread, last_message_at, created_at")
         .order("last_message_at", { ascending: false });
       if (error) throw error;
       return (data ?? []) as ChatConversation[];
@@ -46,3 +48,24 @@ export const conversationMessagesQuery = (conversationId: string | null) =>
       return (data ?? []) as ChatMessageRow[];
     },
   });
+
+export async function sendAdminReply(conversationId: string, text: string) {
+  const { error } = await supabase
+    .from("chat_messages")
+    .insert({ conversation_id: conversationId, role: "admin", content: text });
+  if (error) throw error;
+  const { data: current } = await supabase
+    .from("chat_conversations")
+    .select("visitor_unread")
+    .eq("id", conversationId)
+    .maybeSingle();
+  const { error: updateError } = await supabase
+    .from("chat_conversations")
+    .update({
+      is_read: true,
+      last_message_at: new Date().toISOString(),
+      visitor_unread: (current?.visitor_unread ?? 0) + 1,
+    })
+    .eq("id", conversationId);
+  if (updateError) throw updateError;
+}
