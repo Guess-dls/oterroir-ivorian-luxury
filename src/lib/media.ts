@@ -56,6 +56,19 @@ export function useMediaUrl(path?: string | null): string | null {
   return url;
 }
 
+export const IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+export const IMAGE_ACCEPT = ".jpg,.jpeg,.png,.webp";
+export const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
+
+export function validateImageFile(file: File) {
+  if (!IMAGE_TYPES.includes(file.type.toLowerCase())) {
+    throw new Error(`« ${file.name} » : format non pris en charge (JPG, PNG ou WebP uniquement).`);
+  }
+  if (file.size > MAX_IMAGE_BYTES) {
+    throw new Error(`« ${file.name} » est trop volumineuse (8 Mo maximum).`);
+  }
+}
+
 export async function uploadMedia(file: File, folder: string): Promise<string> {
   const extension = file.name.includes(".") ? file.name.split(".").pop() : "bin";
   const path = `${folder}/${crypto.randomUUID()}.${extension}`;
