@@ -37,6 +37,7 @@ import heroImage from "@/assets/oterroir-hero.jpg";
 import riceImage from "@/assets/riz_noir.png";
 import cornImage from "@/assets/mais-violet.jpg";
 import liqueurImage from "@/assets/liqueurs.jpg";
+import colaGorilleImage from "@/assets/cola.png";
 
 const BRAND_NAME = "O’TERROIR";
 const BRAND_SUBTITLE = "by Stéphanie";
@@ -937,7 +938,7 @@ function GorillaCola() {
             aria-label="Agrandir l'image du Cola de gorille"
           >
             <img
-              src={heroImage}
+              src={colaGorilleImage}
               loading="lazy"
               width={1920}
               height={1104}
