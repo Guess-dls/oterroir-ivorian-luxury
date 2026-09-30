@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { createPortal } from "react-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowRight,
@@ -186,17 +187,13 @@ function Header() {
 
           {/* Actions tablette */}
           <div className="hidden items-center gap-2 sm:flex xl:hidden">
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
-              className="rounded-full border-primary/25 bg-background/40 text-primary backdrop-blur-xl"
+            <a
+              href={`tel:${PHONE}`}
+              className="flex items-center gap-2 rounded-full border border-primary/25 bg-background/40 px-4 py-2 text-xs font-semibold text-primary backdrop-blur-xl transition-all duration-300 hover:bg-primary/10"
             >
-              <a href={`tel:${PHONE}`}>
-                <Phone />
-                <span>Appeler</span>
-              </a>
-            </Button>
+              <Phone className="size-4" />
+              <span>+225 07 49 93 92 67</span>
+            </a>
 
             <Button
               asChild
@@ -333,7 +330,7 @@ function ImageLightbox({
 
   return (
     <div
-      className="fixed inset-0 z-[70] flex items-center justify-center bg-deep/90 p-4 backdrop-blur-2xl"
+      className="fixed inset-0 z-[9999] flex h-[100dvh] w-screen items-center justify-center bg-deep/95 p-4 backdrop-blur-2xl"
       role="dialog"
       aria-modal="true"
       aria-label={`Agrandissement : ${alt}`}
@@ -342,7 +339,7 @@ function ImageLightbox({
       <Button
         variant="ghost"
         size="icon"
-        className="absolute right-4 top-4 z-10 rounded-xl border border-primary-foreground/15 bg-primary-foreground/10 text-primary-foreground backdrop-blur-xl hover:bg-primary-foreground/20"
+        className="fixed right-4 top-4 z-[10000] rounded-xl border border-primary-foreground/15 bg-primary-foreground/10 text-primary-foreground backdrop-blur-xl hover:bg-primary-foreground/20"
         onClick={(event) => {
           event.stopPropagation();
           onClose();
@@ -353,13 +350,13 @@ function ImageLightbox({
       </Button>
 
       <div
-        className="max-h-[92vh] max-w-[94vw] rounded-[2rem] border border-primary-foreground/15 bg-primary-foreground/5 p-2 shadow-2xl backdrop-blur-xl"
+        className="flex max-h-[94dvh] max-w-[96vw] items-center justify-center rounded-[2rem] border border-primary-foreground/15 bg-primary-foreground/5 p-2 shadow-2xl backdrop-blur-xl"
         onClick={(event) => event.stopPropagation()}
       >
         <img
           src={src}
           alt={alt}
-          className="max-h-[88vh] max-w-[90vw] rounded-[1.5rem] object-contain"
+          className="max-h-[90dvh] max-w-[94vw] rounded-[1.5rem] object-contain"
         />
       </div>
     </div>
@@ -395,13 +392,15 @@ function ClickableImage({
         />
       </button>
 
-      {open && (
-        <ImageLightbox
-          src={src}
-          alt={alt}
-          onClose={() => setOpen(false)}
-        />
-      )}
+      {open &&
+        createPortal(
+          <ImageLightbox
+            src={src}
+            alt={alt}
+            onClose={() => setOpen(false)}
+          />,
+          document.body,
+        )}
     </>
   );
 }
@@ -857,13 +856,15 @@ function PurpleCorn() {
         </div>
       </div>
 
-      {open && (
-        <ImageLightbox
-          src={cornImage}
-          alt="Poudre et épis de maïs violet"
-          onClose={() => setOpen(false)}
-        />
-      )}
+      {open &&
+        createPortal(
+          <ImageLightbox
+            src={cornImage}
+            alt="Poudre et épis de maïs violet"
+            onClose={() => setOpen(false)}
+          />,
+          document.body,
+        )}
     </section>
   );
 }
@@ -927,13 +928,15 @@ function GorillaCola() {
         </div>
       </div>
 
-      {open && (
-        <ImageLightbox
-          src={heroImage}
-          alt="Cola de gorille parmi des produits du terroir"
-          onClose={() => setOpen(false)}
-        />
-      )}
+      {open &&
+        createPortal(
+          <ImageLightbox
+            src={heroImage}
+            alt="Cola de gorille parmi des produits du terroir"
+            onClose={() => setOpen(false)}
+          />,
+          document.body,
+        )}
     </section>
   );
 }
@@ -1045,13 +1048,15 @@ function Liqueurs() {
         </p>
       </div>
 
-      {open && (
-        <ImageLightbox
-          src={liqueurImage}
-          alt="Sélection de liqueurs artisanales"
-          onClose={() => setOpen(false)}
-        />
-      )}
+      {open &&
+        createPortal(
+          <ImageLightbox
+            src={liqueurImage}
+            alt="Sélection de liqueurs artisanales"
+            onClose={() => setOpen(false)}
+          />,
+          document.body,
+        )}
     </section>
   );
 }
@@ -1224,61 +1229,63 @@ function Gallery() {
         </div>
       </div>
 
-      {current && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-deep/90 p-4 backdrop-blur-2xl"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Galerie plein écran"
-        >
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute right-5 top-5 rounded-xl border border-primary-foreground/10 bg-primary-foreground/10 text-primary-foreground backdrop-blur-xl hover:bg-primary-foreground/20"
-            onClick={() => setActive(null)}
-            aria-label="Fermer"
+      {current &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[9999] flex h-[100dvh] w-screen items-center justify-center bg-deep/95 p-4 backdrop-blur-2xl"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Galerie plein écran"
           >
-            <X />
-          </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="fixed right-5 top-5 z-[10000] rounded-xl border border-primary-foreground/10 bg-primary-foreground/10 text-primary-foreground backdrop-blur-xl hover:bg-primary-foreground/20"
+              onClick={() => setActive(null)}
+              aria-label="Fermer"
+            >
+              <X />
+            </Button>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute left-3 rounded-xl border border-primary-foreground/10 bg-primary-foreground/10 text-primary-foreground backdrop-blur-xl md:left-8"
-            onClick={() =>
-              setActive(
-                ((active ?? 0) - 1 + total) % total,
-              )
-            }
-            aria-label="Photo précédente"
-          >
-            <ChevronLeft />
-          </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute left-3 rounded-xl border border-primary-foreground/10 bg-primary-foreground/10 text-primary-foreground backdrop-blur-xl md:left-8"
+              onClick={() =>
+                setActive(
+                  ((active ?? 0) - 1 + total) % total,
+                )
+              }
+              aria-label="Photo précédente"
+            >
+              <ChevronLeft />
+            </Button>
 
-          <div className="max-h-[88vh] max-w-[88vw] rounded-[1.5rem] border border-primary-foreground/15 bg-primary-foreground/5 p-2 shadow-2xl backdrop-blur-xl">
-            <MediaImage
-              path={current.image_url}
-              alt={current.alt_text}
-              loading="eager"
-              className="max-h-[84vh] max-w-[84vw] rounded-xl object-contain"
-            />
-          </div>
+            <div className="max-h-[88vh] max-w-[88vw] rounded-[1.5rem] border border-primary-foreground/15 bg-primary-foreground/5 p-2 shadow-2xl backdrop-blur-xl">
+              <MediaImage
+                path={current.image_url}
+                alt={current.alt_text}
+                loading="eager"
+                className="max-h-[84vh] max-w-[84vw] rounded-xl object-contain"
+              />
+            </div>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute right-3 rounded-xl border border-primary-foreground/10 bg-primary-foreground/10 text-primary-foreground backdrop-blur-xl md:right-8"
-            onClick={() =>
-              setActive(
-                ((active ?? 0) + 1) % total,
-              )
-            }
-            aria-label="Photo suivante"
-          >
-            <ChevronRight />
-          </Button>
-        </div>
-      )}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-3 rounded-xl border border-primary-foreground/10 bg-primary-foreground/10 text-primary-foreground backdrop-blur-xl md:right-8"
+              onClick={() =>
+                setActive(
+                  ((active ?? 0) + 1) % total,
+                )
+              }
+              aria-label="Photo suivante"
+            >
+              <ChevronRight />
+            </Button>
+          </div>,
+          document.body,
+        )}
     </section>
   );
 }
@@ -1441,13 +1448,16 @@ function PostImage({
         )}
       </button>
 
-      {open && resolved && (
-        <ImageLightbox
-          src={resolved}
-          alt={alt}
-          onClose={() => setOpen(false)}
-        />
-      )}
+      {open &&
+        resolved &&
+        createPortal(
+          <ImageLightbox
+            src={resolved}
+            alt={alt}
+            onClose={() => setOpen(false)}
+          />,
+          document.body,
+        )}
     </>
   );
 }
