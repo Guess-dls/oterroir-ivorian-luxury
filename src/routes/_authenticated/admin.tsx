@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { MediaImage } from "@/components/MediaImage";
 import { supabase } from "@/integrations/supabase/client";
-import { assetMap, removeMedia, uploadMedia } from "@/lib/media";
+import { assetMap, removeMedia, uploadMedia, useMediaUrl } from "@/lib/media";
 import {
   photosQuery,
   postsQuery,
@@ -52,39 +52,138 @@ function useIsAdmin() {
   });
 }
 
-function MediaField({ value, onChange, folder, label }: { value: string | null; onChange: (path: string | null) => void; folder: string; label: string }) {
+function MediaField({
+  value,
+  onChange,
+  folder,
+  label,
+}: {
+  value: string | null;
+  onChange: (path: string | null) => void;
+  folder: string;
+  label: string;
+}) {
   const [busy, setBusy] = useState(false);
+  const isVideo = folder === "videos";
+
+  const resolvedMediaUrl = useMediaUrl(
+    isVideo && value && !value.startsWith("http") ? value : null,
+  );
+
+  const youtubeId = value?.match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([^?&/]+)/,
+  )?.[1];
+
+  const vimeoId = value?.match(
+    /(?:vimeo\.com\/(?:video\/)?|player\.vimeo\.com\/video\/)(\d+)/,
+  )?.[1];
+
+  const isYoutube = Boolean(youtubeId);
+  const isVimeo = Boolean(vimeoId);
+
+  const videoSrc =
+    isVideo && !isYoutube && !isVimeo
+      ? resolvedMediaUrl ?? (value?.startsWith("http") ? value : undefined)
+      : undefined;
+
   return (
     <div className="space-y-2.5">
       <Label>{label}</Label>
-      <div className="flex items-center gap-3 rounded-xl border border-border/70 bg-muted/20 p-3">
-        {value ? <MediaImage path={value} alt="Aperçu" className="size-16 rounded-lg object-cover ring-1 ring-border" /> : <div className="grid size-16 place-items-center rounded-lg bg-muted text-muted-foreground ring-1 ring-border"><Upload className="size-4" /></div>}
-        <label className="cursor-pointer rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-muted">
-          {busy ? "Envoi…" : "Choisir un fichier"}
-          <input
-            type="file"
-            className="hidden"
-            accept="image/*,video/*"
-            onChange={async (event) => {
-              const file = event.target.files?.[0];
-              if (!file) return;
-              setBusy(true);
-              try {
-                const path = await uploadMedia(file, folder);
-                onChange(path);
-              } catch (error) {
-                toast.error(error instanceof Error ? error.message : "Envoi impossible.");
-              } finally {
-                setBusy(false);
-              }
-            }}
-          />
-        </label>
-        {value && (
-          <Button type="button" variant="ghost" size="sm" onClick={() => onChange(null)}>
-            Retirer
-          </Button>
+
+      <div className="space-y-3 rounded-xl border border-border/70 bg-muted/20 p-3">
+        {value ? (
+          isVideo ? (
+            <>
+              {isYoutube && youtubeId ? (
+                <div className="aspect-video w-full overflow-hidden rounded-xl bg-black ring-1 ring-border">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${youtubeId}`}
+                    title="Aperçu vidéo YouTube"
+                    className="h-full w-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  />
+                </div>
+              ) : isVimeo && vimeoId ? (
+                <div className="aspect-video w-full overflow-hidden rounded-xl bg-black ring-1 ring-border">
+                  <iframe
+                    src={`https://player.vimeo.com/video/${vimeoId}`}
+                    title="Aperçu vidéo Vimeo"
+                    className="h-full w-full"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              ) : videoSrc ? (
+                <video
+                  src={videoSrc}
+                  controls
+                  preload="metadata"
+                  className="max-h-72 w-full rounded-xl bg-black object-contain ring-1 ring-border"
+                >
+                  Votre navigateur ne prend pas en charge la lecture vidéo.
+                </video>
+              ) : (
+                <div className="grid h-40 w-full place-items-center rounded-xl bg-muted text-sm text-muted-foreground ring-1 ring-border">
+                  Aperçu vidéo indisponible
+                </div>
+              )}
+            </>
+          ) : (
+            <MediaImage
+              path={value}
+              alt="Aperçu"
+              className="h-40 w-full rounded-xl object-cover ring-1 ring-border"
+            />
+          )
+        ) : (
+          <div className="grid h-40 w-full place-items-center rounded-xl bg-muted text-muted-foreground ring-1 ring-border">
+            <Upload className="size-5" />
+          </div>
         )}
+
+        <div className="flex flex-wrap items-center gap-3">
+          <label className="cursor-pointer rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-muted">
+            {busy ? "Envoi…" : "Choisir un fichier"}
+
+            <input
+              type="file"
+              className="hidden"
+              accept={isVideo ? "video/*" : "image/*"}
+              onChange={async (event) => {
+                const file = event.target.files?.[0];
+                if (!file) return;
+
+                setBusy(true);
+
+                try {
+                  const path = await uploadMedia(file, folder);
+                  onChange(path);
+                } catch (error) {
+                  toast.error(
+                    error instanceof Error
+                      ? error.message
+                      : "Envoi impossible.",
+                  );
+                } finally {
+                  setBusy(false);
+                  event.target.value = "";
+                }
+              }}
+            />
+          </label>
+
+          {value && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => onChange(null)}
+            >
+              Retirer
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );
