@@ -132,7 +132,13 @@ function Header() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-40 px-3 pt-3 sm:px-5 lg:px-8">
-      <div className="mx-auto max-w-7xl overflow-hidden rounded-2xl border border-white/20 bg-background/65 shadow-[0_18px_50px_-20px_rgba(0,0,0,0.35)] backdrop-blur-2xl ring-1 ring-white/10">
+      <div
+        className={`mx-auto max-w-7xl overflow-hidden rounded-2xl border border-white/20 bg-background/65 shadow-[0_18px_50px_-20px_rgba(0,0,0,0.35)] backdrop-blur-2xl ring-1 ring-white/10 transition-all duration-500 ease-out ${
+          open
+            ? "translate-y-0 scale-[1.01] shadow-[0_24px_70px_-25px_rgba(0,0,0,0.45)]"
+            : "translate-y-0 scale-100"
+        }`}
+      >
         <div className="flex h-[72px] items-center justify-between px-4 sm:px-5 lg:px-6">
           <Logo />
 
@@ -140,22 +146,51 @@ function Header() {
             aria-label="Navigation principale"
             className="hidden items-center gap-1 rounded-full border border-white/15 bg-background/35 p-1 backdrop-blur-xl lg:flex"
           >
-            {navLinks.map(([label, href]) => (
+            {navLinks.map(([label, href], index) => (
               <a
                 key={href}
                 href={href}
-                className="group rounded-full px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-foreground/70 transition-all duration-300 hover:bg-primary/10 hover:text-primary"
+                className="group relative overflow-hidden rounded-full px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-foreground/70 transition-all duration-300 hover:bg-primary/10 hover:text-primary"
+                style={{
+                  animation: `headerSlideIn 500ms ${
+                    index * 70
+                  }ms cubic-bezier(0.22, 1, 0.36, 1) both`,
+                }}
               >
-                {label}
+                <span className="relative z-10">{label}</span>
+                <span className="absolute inset-x-4 bottom-1 h-px origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100" />
               </a>
             ))}
+
+            <a
+              href="#contact"
+              className="group relative ml-1 overflow-hidden rounded-full border border-primary/20 bg-primary/10 px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.12em] text-primary transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/20"
+              style={{
+                animation:
+                  "headerSlideIn 500ms 350ms cubic-bezier(0.22, 1, 0.36, 1) both",
+              }}
+            >
+              <span className="relative z-10">Contact</span>
+              <span className="absolute inset-0 -translate-x-full bg-primary-foreground/10 transition-transform duration-500 group-hover:translate-x-full" />
+            </a>
           </nav>
 
           <div className="hidden items-center gap-2 sm:flex">
             <Button
               asChild
               variant="ghost"
-              className="h-10 rounded-full border border-transparent px-4 text-foreground/75 hover:border-primary/20 hover:bg-primary/10 hover:text-primary"
+              className="h-10 rounded-full border border-transparent px-4 text-foreground/75 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/20 hover:bg-primary/10 hover:text-primary"
+            >
+              <a href="#contact">
+                <Mail />
+                <span>Contact</span>
+              </a>
+            </Button>
+
+            <Button
+              asChild
+              variant="ghost"
+              className="h-10 rounded-full border border-transparent px-4 text-foreground/75 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/20 hover:bg-primary/10 hover:text-primary"
             >
               <a href={`tel:${PHONE}`}>
                 <Phone />
@@ -177,7 +212,7 @@ function Header() {
           <Button
             variant="ghost"
             size="icon"
-            className="size-11 rounded-full border border-white/15 bg-background/40 backdrop-blur-md hover:bg-primary/10 hover:text-primary lg:hidden"
+            className="size-11 rounded-full border border-white/15 bg-background/40 backdrop-blur-md transition-all duration-300 hover:rotate-3 hover:bg-primary/10 hover:text-primary lg:hidden"
             onClick={() => setOpen(!open)}
             aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
           >
@@ -186,24 +221,53 @@ function Header() {
         </div>
 
         {open && (
-          <div className="border-t border-white/15 bg-background/45 p-3 backdrop-blur-2xl lg:hidden">
+          <div
+            className="border-t border-white/15 bg-background/45 p-3 backdrop-blur-2xl"
+            style={{
+              animation:
+                "headerMenuSlide 400ms cubic-bezier(0.22, 1, 0.36, 1) both",
+            }}
+          >
             <nav
               aria-label="Navigation mobile"
               className="flex flex-col gap-1 rounded-xl border border-white/15 bg-background/30 p-2"
             >
-              {navLinks.map(([label, href]) => (
+              {navLinks.map(([label, href], index) => (
                 <a
                   key={href}
                   href={href}
                   onClick={() => setOpen(false)}
-                  className="rounded-xl px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.1em] text-foreground/75 transition-all hover:bg-primary/10 hover:text-primary"
+                  className="rounded-xl px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.1em] text-foreground/75 transition-all duration-300 hover:translate-x-1 hover:bg-primary/10 hover:text-primary"
+                  style={{
+                    animation: `headerMobileItem 400ms ${
+                      index * 55
+                    }ms cubic-bezier(0.22, 1, 0.36, 1) both`,
+                  }}
                 >
                   {label}
                 </a>
               ))}
+
+              <a
+                href="#contact"
+                onClick={() => setOpen(false)}
+                className="rounded-xl border border-primary/20 bg-primary/10 px-4 py-3.5 text-sm font-bold uppercase tracking-[0.1em] text-primary transition-all duration-300 hover:translate-x-1 hover:bg-primary hover:text-primary-foreground"
+                style={{
+                  animation:
+                    "headerMobileItem 400ms 275ms cubic-bezier(0.22, 1, 0.36, 1) both",
+                }}
+              >
+                Contact
+              </a>
             </nav>
 
-            <div className="mt-3 grid grid-cols-2 gap-2">
+            <div
+              className="mt-3 grid grid-cols-2 gap-2"
+              style={{
+                animation:
+                  "headerMenuSlide 450ms 100ms cubic-bezier(0.22, 1, 0.36, 1) both",
+              }}
+            >
               <Button
                 asChild
                 variant="outline"
@@ -228,6 +292,51 @@ function Header() {
           </div>
         )}
       </div>
+
+      <style>{`
+        @keyframes headerSlideIn {
+          from {
+            opacity: 0;
+            transform: translateX(-18px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes headerMenuSlide {
+          from {
+            opacity: 0;
+            transform: translateY(-14px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes headerMobileItem {
+          from {
+            opacity: 0;
+            transform: translateX(-14px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          *,
+          *::before,
+          *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+          }
+        }
+      `}</style>
     </header>
   );
 }
@@ -1366,7 +1475,9 @@ function Posts() {
       id="actualites"
       className="relative overflow-hidden bg-muted py-24 md:py-32"
     >
-      <div className="mx-auto max-w-7xl px-5 lg:px-8">
+      <div className="pointer-events-none absolute -right-32 top-20 size-96 rounded-full bg-primary/10 blur-3xl" />
+
+      <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
         <SectionHeading
           eyebrow="Actualités"
           title="Les nouvelles du terroir."
@@ -1380,11 +1491,18 @@ function Posts() {
             >
               {post.image_url && (
                 <div className="overflow-hidden p-2 pb-0">
-                  <MediaImage
-                    path={post.image_url}
+                  <ClickableImage
+                    src={post.image_url}
                     alt={post.title}
-                    className="h-52 w-full rounded-xl object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    buttonClassName="relative w-full overflow-hidden rounded-xl"
+                    className="h-52 w-full rounded-xl object-cover"
                   />
+
+                  <div className="pointer-events-none relative -mt-12 mx-3 mb-3 flex justify-end">
+                    <span className="rounded-full border border-white/20 bg-deep/50 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-lg backdrop-blur-md">
+                      Agrandir
+                    </span>
+                  </div>
                 </div>
               )}
 
@@ -1400,7 +1518,7 @@ function Posts() {
                   })}
                 </time>
 
-                <h3 className="mt-2 font-display text-2xl font-semibold">
+                <h3 className="mt-2 font-display text-2xl font-semibold transition-colors duration-300 group-hover:text-primary">
                   {post.title}
                 </h3>
 
