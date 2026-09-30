@@ -990,7 +990,7 @@ function GorillaCola() {
       {open &&
         createPortal(
           <ImageLightbox
-            src={heroImage}
+            src={colaGorilleImage}
             alt="Cola de gorille parmi des produits du terroir"
             onClose={() => setOpen(false)}
           />,
