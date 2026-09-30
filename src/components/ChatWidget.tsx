@@ -109,6 +109,18 @@ export function ChatWidget() {
     }
   }, [open, session]);
 
+  useEffect(() => {
+    const handleOpenChat = () => {
+      setOpen(true);
+    };
+  
+    window.addEventListener("oterroir:open-chat", handleOpenChat);
+  
+    return () => {
+      window.removeEventListener("oterroir:open-chat", handleOpenChat);
+    };
+  }, []);
+
   const start = useMutation({
     mutationFn: async () => {
       const result = await startVisitorConversation({
