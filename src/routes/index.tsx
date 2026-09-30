@@ -167,31 +167,208 @@ function Header() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-40 px-3 pt-3 sm:px-5 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <div className="rounded-2xl border border-border/60 bg-background/75 shadow-lg shadow-deep/5 backdrop-blur-2xl">
-          <div className="flex h-[4.5rem] items-center justify-between px-4 sm:px-5 lg:px-6">
-            <Logo />
+      <div
+        className="
+          mx-auto max-w-7xl
+          overflow-hidden rounded-2xl
+          border border-white/20
+          bg-background/65
+          shadow-[0_18px_50px_-20px_rgba(0,0,0,0.35)]
+          backdrop-blur-2xl
+          ring-1 ring-white/10
+        "
+      >
+        <div className="flex h-[72px] items-center justify-between px-4 sm:px-5 lg:px-6">
+          {/* Logo */}
+          <Logo />
 
+          {/* Navigation desktop */}
+          <nav
+            aria-label="Navigation principale"
+            className="
+              hidden items-center gap-1
+              rounded-full
+              border border-white/15
+              bg-background/35
+              p-1
+              backdrop-blur-xl
+              lg:flex
+            "
+          >
+            {navLinks.map(([label, href], index) => (
+              <a
+                key={href}
+                href={href}
+                className="
+                  group relative
+                  rounded-full
+                  px-4 py-2.5
+                  text-[11px]
+                  font-semibold
+                  uppercase
+                  tracking-[0.12em]
+                  text-foreground/70
+                  transition-all
+                  duration-300
+                  hover:bg-primary/10
+                  hover:text-primary
+                "
+              >
+                {label}
+
+                {index === 0 && (
+                  <span
+                    className="
+                      absolute inset-x-4 bottom-1
+                      h-px
+                      origin-left
+                      scale-x-0
+                      bg-primary
+                      transition-transform
+                      duration-300
+                      group-hover:scale-x-100
+                    "
+                  />
+                )}
+              </a>
+            ))}
+          </nav>
+
+          {/* Actions desktop */}
+          <div className="hidden items-center gap-2 sm:flex">
+            <Button
+              asChild
+              variant="ghost"
+              className="
+                h-10
+                rounded-full
+                border border-transparent
+                px-4
+                text-foreground/75
+                hover:border-primary/20
+                hover:bg-primary/10
+                hover:text-primary
+              "
+            >
+              <a href="tel:+2250749939267">
+                <Phone />
+                <span className="hidden xl:inline">Appeler</span>
+              </a>
+            </Button>
+
+            <Button
+              asChild
+              className="
+                h-10
+                rounded-full
+                border border-primary/30
+                bg-primary/90
+                px-5
+                shadow-[0_8px_25px_-8px_hsl(var(--primary))]
+                transition-all
+                duration-300
+                hover:-translate-y-0.5
+                hover:bg-primary
+                hover:shadow-[0_12px_30px_-8px_hsl(var(--primary))]
+              "
+            >
+              <a
+                href={whatsappUrl()}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <ShoppingBag />
+                <span>WhatsApp</span>
+              </a>
+            </Button>
+          </div>
+
+          {/* Mobile trigger */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="
+              size-11
+              rounded-full
+              border border-white/15
+              bg-background/40
+              backdrop-blur-md
+              hover:bg-primary/10
+              hover:text-primary
+              lg:hidden
+            "
+            onClick={() => setOpen(!open)}
+            aria-label={
+              open
+                ? "Fermer le menu"
+                : "Ouvrir le menu"
+            }
+          >
+            {open ? (
+              <X className="size-5" />
+            ) : (
+              <Menu className="size-5" />
+            )}
+          </Button>
+        </div>
+
+        {/* Mobile menu */}
+        {open && (
+          <div
+            className="
+              border-t border-white/15
+              bg-background/45
+              p-3
+              backdrop-blur-2xl
+              lg:hidden
+            "
+          >
             <nav
-              aria-label="Navigation principale"
-              className="hidden items-center gap-7 lg:flex"
+              aria-label="Navigation mobile"
+              className="
+                flex flex-col gap-1
+                rounded-xl
+                border border-white/15
+                bg-background/30
+                p-2
+              "
             >
               {navLinks.map(([label, href]) => (
                 <a
                   key={href}
                   href={href}
-                  className="text-xs font-semibold uppercase tracking-[0.12em] text-foreground/70 transition-all hover:text-primary"
+                  onClick={() => setOpen(false)}
+                  className="
+                    rounded-xl
+                    px-4 py-3.5
+                    text-sm
+                    font-semibold
+                    uppercase
+                    tracking-[0.1em]
+                    text-foreground/75
+                    transition-all
+                    hover:bg-primary/10
+                    hover:text-primary
+                  "
                 >
                   {label}
                 </a>
               ))}
             </nav>
 
-            <div className="hidden items-center gap-2 sm:flex">
+            <div className="mt-3 grid grid-cols-2 gap-2">
               <Button
                 asChild
                 variant="outline"
-                className="h-10 border-primary/30 bg-background/40 text-primary backdrop-blur-xl hover:border-primary hover:bg-primary/10"
+                className="
+                  h-11
+                  rounded-xl
+                  border-primary/25
+                  bg-background/35
+                  text-primary
+                  backdrop-blur-md
+                  hover:bg-primary/10
+                "
               >
                 <a href="tel:+2250749939267">
                   <Phone />
@@ -201,51 +378,25 @@ function Header() {
 
               <Button
                 asChild
-                className="h-10 bg-primary shadow-lg shadow-primary/20"
+                className="
+                  h-11
+                  rounded-xl
+                  bg-primary/90
+                  shadow-md
+                "
               >
-                <a href={whatsappUrl()} target="_blank" rel="noreferrer">
-                  <ShoppingBag />
-                  WhatsApp
-                </a>
-              </Button>
-            </div>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-xl bg-background/40 backdrop-blur-xl lg:hidden"
-              onClick={() => setOpen(!open)}
-              aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
-            >
-              {open ? <X /> : <Menu />}
-            </Button>
-          </div>
-
-          {open && (
-            <nav className="border-t border-border/50 bg-background/80 px-4 py-4 backdrop-blur-2xl lg:hidden">
-              {navLinks.map(([label, href]) => (
-                <a
-                  key={href}
-                  href={href}
-                  onClick={() => setOpen(false)}
-                  className="block border-b border-border/50 py-3 text-sm font-semibold uppercase tracking-[0.1em]"
-                >
-                  {label}
-                </a>
-              ))}
-
-              <Button asChild className="mt-4 w-full shadow-lg">
                 <a
                   href={whatsappUrl()}
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Commander sur WhatsApp
+                  <ShoppingBag />
+                  WhatsApp
                 </a>
               </Button>
-            </nav>
-          )}
-        </div>
+            </div>
+          </div>
+        )}
       </div>
     </header>
   );
