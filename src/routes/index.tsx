@@ -155,6 +155,7 @@ function Logo({ inverse = false }: { inverse?: boolean }) {
       <span className="font-display text-2xl font-bold tracking-tight">
         O’TERROIR
       </span>
+
       <span className="mt-1 block text-[8px] font-semibold uppercase tracking-[0.28em]">
         by Stéphanie
       </span>
@@ -179,10 +180,8 @@ function Header() {
         "
       >
         <div className="flex h-[72px] items-center justify-between px-4 sm:px-5 lg:px-6">
-          {/* Logo */}
           <Logo />
 
-          {/* Navigation desktop */}
           <nav
             aria-label="Navigation principale"
             className="
@@ -234,7 +233,6 @@ function Header() {
             ))}
           </nav>
 
-          {/* Actions desktop */}
           <div className="hidden items-center gap-2 sm:flex">
             <Button
               asChild
@@ -283,7 +281,6 @@ function Header() {
             </Button>
           </div>
 
-          {/* Mobile trigger */}
           <Button
             variant="ghost"
             size="icon"
@@ -298,11 +295,7 @@ function Header() {
               lg:hidden
             "
             onClick={() => setOpen(!open)}
-            aria-label={
-              open
-                ? "Fermer le menu"
-                : "Ouvrir le menu"
-            }
+            aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
           >
             {open ? (
               <X className="size-5" />
@@ -312,7 +305,6 @@ function Header() {
           </Button>
         </div>
 
-        {/* Mobile menu */}
         {open && (
           <div
             className="
@@ -378,12 +370,7 @@ function Header() {
 
               <Button
                 asChild
-                className="
-                  h-11
-                  rounded-xl
-                  bg-primary/90
-                  shadow-md
-                "
+                className="h-11 rounded-xl bg-primary/90 shadow-md"
               >
                 <a
                   href={whatsappUrl()}
@@ -450,7 +437,20 @@ function Hero() {
       <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent" />
 
       <div className="relative mx-auto w-full max-w-7xl px-5 pb-12 pt-32 lg:px-8 lg:pb-20">
-        <div className="max-w-3xl rounded-[2rem] border border-white/20 bg-background/40 p-6 shadow-2xl shadow-deep/10 backdrop-blur-xl sm:p-8 lg:p-10">
+        <div
+          className="
+            max-w-3xl
+            rounded-[2rem]
+            border border-white/20
+            bg-background/40
+            p-6
+            shadow-2xl shadow-deep/10
+            backdrop-blur-xl
+            ring-1 ring-white/10
+            sm:p-8
+            lg:p-10
+          "
+        >
           <p className="mb-5 text-xs font-bold uppercase tracking-[0.24em] text-primary">
             Produits du terroir ivoirien
           </p>
@@ -481,7 +481,16 @@ function Hero() {
               asChild
               size="lg"
               variant="outline"
-              className="h-12 border-primary/40 bg-background/30 px-6 text-primary shadow-lg backdrop-blur-xl hover:bg-primary/10"
+              className="
+                h-12
+                border-primary/40
+                bg-background/30
+                px-6
+                text-primary
+                shadow-lg
+                backdrop-blur-xl
+                hover:bg-primary/10
+              "
             >
               <a href={whatsappUrl()} target="_blank" rel="noreferrer">
                 Commander sur WhatsApp
@@ -494,7 +503,18 @@ function Hero() {
               (item) => (
                 <span
                   key={item}
-                  className="rounded-full border border-primary/20 bg-background/35 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-earth backdrop-blur-md"
+                  className="
+                    rounded-full
+                    border border-primary/20
+                    bg-background/35
+                    px-3 py-1.5
+                    text-[10px]
+                    font-semibold
+                    uppercase
+                    tracking-[0.14em]
+                    text-earth
+                    backdrop-blur-md
+                  "
                 >
                   {item}
                 </span>
@@ -522,11 +542,21 @@ function TrustBar() {
         ].map((item, index) => (
           <div
             key={item}
-            className="rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5 px-3 py-5 text-center backdrop-blur-md"
+            className="
+              rounded-2xl
+              border border-primary-foreground/10
+              bg-primary-foreground/5
+              px-3 py-5
+              text-center
+              backdrop-blur-md
+              transition-all duration-300
+              hover:bg-primary-foreground/10
+            "
           >
             <span className="mb-1 block font-display text-xl text-gold">
               0{index + 1}
             </span>
+
             <span className="text-[10px] font-bold uppercase tracking-[0.16em]">
               {item}
             </span>
@@ -539,12 +569,26 @@ function TrustBar() {
 
 function Universe() {
   return (
-    <section id="univers" className="relative overflow-hidden bg-background py-24 md:py-32">
+    <section
+      id="univers"
+      className="relative overflow-hidden bg-background py-24 md:py-32"
+    >
       <div className="pointer-events-none absolute -left-32 top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
       <div className="pointer-events-none absolute -right-32 bottom-0 size-72 rounded-full bg-gold/10 blur-3xl" />
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-5 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
-        <div className="reveal rounded-[2rem] border border-primary/10 bg-primary/5 p-7 backdrop-blur-xl md:p-10">
+        <div
+          className="
+            reveal
+            rounded-[2rem]
+            border border-primary/10
+            bg-primary/5
+            p-7
+            shadow-xl
+            backdrop-blur-xl
+            md:p-10
+          "
+        >
           <p className="font-display text-5xl font-medium leading-tight text-primary md:text-7xl">
             « Le terroir,
             <br />
@@ -552,7 +596,18 @@ function Universe() {
           </p>
         </div>
 
-        <div className="reveal rounded-[2rem] border border-border/70 bg-card/50 p-7 shadow-xl backdrop-blur-xl md:p-10">
+        <div
+          className="
+            reveal
+            rounded-[2rem]
+            border border-border/70
+            bg-card/50
+            p-7
+            shadow-xl
+            backdrop-blur-xl
+            md:p-10
+          "
+        >
           <p className="mb-4 text-xs font-bold uppercase tracking-[0.24em] text-primary">
             Notre univers
           </p>
@@ -575,6 +630,7 @@ function Universe() {
 
 function Catalogue() {
   const allProducts = useProducts();
+
   const [filter, setFilter] =
     useState<(typeof filters)[number]>("TOUS");
 
@@ -622,7 +678,19 @@ function Catalogue() {
           {visible.map((product) => (
             <article
               key={product.id}
-              className="group overflow-hidden rounded-[1.5rem] border border-border/70 bg-card/65 shadow-lg shadow-deep/5 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-deep/10 reveal"
+              className="
+                group
+                overflow-hidden
+                rounded-[1.5rem]
+                border border-border/70
+                bg-card/65
+                shadow-lg shadow-deep/5
+                backdrop-blur-xl
+                transition-all duration-500
+                hover:-translate-y-1
+                hover:shadow-2xl hover:shadow-deep/10
+                reveal
+              "
             >
               <div className="relative h-60 overflow-hidden">
                 <MediaImage
@@ -630,10 +698,24 @@ function Catalogue() {
                   fallback={assetMap[product.asset_key ?? "hero"]}
                   objectPosition={product.image_position}
                   alt={product.name}
-                  className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.06]"
+                  className="
+                    h-full w-full
+                    object-cover object-center
+                    transition-transform duration-700
+                    group-hover:scale-[1.06]
+                  "
                 />
 
-                <div className="absolute inset-x-3 bottom-3 rounded-xl border border-white/20 bg-deep/35 px-3 py-2 backdrop-blur-md">
+                <div
+                  className="
+                    absolute inset-x-3 bottom-3
+                    rounded-xl
+                    border border-white/20
+                    bg-deep/35
+                    px-3 py-2
+                    backdrop-blur-md
+                  "
+                >
                   <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-foreground">
                     {product.category}
                   </p>
@@ -641,7 +723,9 @@ function Catalogue() {
               </div>
 
               <div className="p-6">
-                <h3 className="text-3xl font-semibold">{product.name}</h3>
+                <h3 className="text-3xl font-semibold">
+                  {product.name}
+                </h3>
 
                 <p className="mt-3 min-h-12 text-sm leading-6 text-muted-foreground">
                   {product.description}
@@ -656,7 +740,13 @@ function Catalogue() {
                     asChild
                     size="sm"
                     variant="outline"
-                    className="border-primary/40 bg-background/30 text-primary backdrop-blur-xl hover:bg-primary/10"
+                    className="
+                      border-primary/40
+                      bg-background/30
+                      text-primary
+                      backdrop-blur-xl
+                      hover:bg-primary/10
+                    "
                   >
                     <a
                       href={orderUrl(product.name)}
@@ -688,7 +778,18 @@ function RiceCollection() {
       <div className="pointer-events-none absolute left-0 top-1/3 size-96 rounded-full bg-gold/10 blur-3xl" />
 
       <div className="relative mx-auto grid max-w-7xl items-start gap-10 px-5 lg:grid-cols-2 lg:px-8">
-        <div className="sticky top-28 overflow-hidden rounded-[2rem] border border-border/60 bg-card/50 p-2 shadow-2xl backdrop-blur-xl">
+        <div
+          className="
+            sticky top-28
+            overflow-hidden
+            rounded-[2rem]
+            border border-border/60
+            bg-card/50
+            p-2
+            shadow-2xl
+            backdrop-blur-xl
+          "
+        >
           <img
             src={riceImage}
             loading="lazy"
@@ -699,20 +800,45 @@ function RiceCollection() {
           />
         </div>
 
-        <div className="rounded-[2rem] border border-border/60 bg-card/40 p-6 shadow-xl backdrop-blur-xl md:p-8">
+        <div
+          className="
+            rounded-[2rem]
+            border border-border/60
+            bg-card/40
+            p-6
+            shadow-xl
+            backdrop-blur-xl
+            md:p-8
+          "
+        >
           <SectionHeading
             eyebrow="Collection Riz Local"
             title="Des grains, autant d’expressions du terroir."
           />
 
-          <div className="divide-y divide-border/60 overflow-hidden rounded-2xl border border-border/60 bg-background/35">
+          <div
+            className="
+              divide-y divide-border/60
+              overflow-hidden
+              rounded-2xl
+              border border-border/60
+              bg-background/35
+            "
+          >
             {rices.map((rice, index) => (
               <a
                 key={rice.id}
                 href={orderUrl(rice.name)}
                 target="_blank"
                 rel="noreferrer"
-                className="group grid grid-cols-[2rem_1fr_auto] items-center gap-3 px-4 py-5 transition-colors hover:bg-primary/5"
+                className="
+                  group
+                  grid grid-cols-[2rem_1fr_auto]
+                  items-center gap-3
+                  px-4 py-5
+                  transition-colors
+                  hover:bg-primary/5
+                "
               >
                 <span className="text-xs text-muted-foreground">
                   {String(index + 1).padStart(2, "0")}
@@ -733,7 +859,10 @@ function RiceCollection() {
             Autres formats et disponibilités : nous contacter.
           </p>
 
-          <Button asChild className="mt-6 h-12 shadow-lg shadow-primary/15">
+          <Button
+            asChild
+            className="mt-6 h-12 shadow-lg shadow-primary/15"
+          >
             <a
               href={whatsappUrl(
                 "Bonjour O’TERROIR by Stéphanie 👋 Je souhaite connaître les formats et disponibilités de votre collection de riz local.",
@@ -757,7 +886,18 @@ function PurpleCorn() {
       <div className="pointer-events-none absolute -right-24 top-1/4 size-96 rounded-full bg-gold/10 blur-3xl" />
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-5 lg:grid-cols-2 lg:px-8">
-        <div className="reveal rounded-[2rem] border border-accent-foreground/15 bg-accent-foreground/5 p-7 shadow-2xl backdrop-blur-xl md:p-10">
+        <div
+          className="
+            reveal
+            rounded-[2rem]
+            border border-accent-foreground/15
+            bg-accent-foreground/5
+            p-7
+            shadow-2xl
+            backdrop-blur-xl
+            md:p-10
+          "
+        >
           <p className="text-xs font-bold uppercase tracking-[0.24em] text-gold">
             Un ingrédient singulier
           </p>
@@ -776,7 +916,14 @@ function PurpleCorn() {
             {["Local", "Authentique", "Culinaire"].map((tag) => (
               <span
                 key={tag}
-                className="rounded-full border border-accent-foreground/20 bg-accent-foreground/5 px-4 py-2 text-xs uppercase tracking-[0.14em] backdrop-blur-md"
+                className="
+                  rounded-full
+                  border border-accent-foreground/20
+                  bg-accent-foreground/5
+                  px-4 py-2
+                  text-xs uppercase tracking-[0.14em]
+                  backdrop-blur-md
+                "
               >
                 {tag}
               </span>
@@ -785,7 +932,13 @@ function PurpleCorn() {
 
           <Button
             asChild
-            className="mt-8 bg-gold text-deep shadow-xl shadow-deep/20 hover:bg-gold/90"
+            className="
+              mt-8
+              bg-gold
+              text-deep
+              shadow-xl shadow-deep/20
+              hover:bg-gold/90
+            "
           >
             <a
               href={orderUrl("Poudre de maïs violet")}
@@ -797,14 +950,30 @@ function PurpleCorn() {
           </Button>
         </div>
 
-        <div className="rounded-[2rem] border border-accent-foreground/15 bg-accent-foreground/5 p-2 shadow-2xl backdrop-blur-xl">
+        <div
+          className="
+            rounded-[2rem]
+            border border-accent-foreground/15
+            bg-accent-foreground/5
+            p-2
+            shadow-2xl
+            backdrop-blur-xl
+          "
+        >
           <img
             src={cornImage}
             loading="lazy"
             width={1200}
             height={1408}
             alt="Poudre et épis de maïs violet"
-            className="aspect-[4/5] max-h-[650px] w-full rounded-[1.5rem] object-cover reveal"
+            className="
+              aspect-[4/5]
+              max-h-[650px]
+              w-full
+              rounded-[1.5rem]
+              object-cover
+              reveal
+            "
           />
         </div>
       </div>
@@ -816,18 +985,46 @@ function GorillaCola() {
   return (
     <section className="relative overflow-hidden bg-background py-24">
       <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 lg:grid-cols-[1.15fr_0.85fr] lg:px-8">
-        <div className="relative min-h-[430px] overflow-hidden rounded-[2rem] border border-border/60 bg-card/40 p-2 shadow-2xl backdrop-blur-xl">
+        <div
+          className="
+            relative min-h-[430px]
+            overflow-hidden
+            rounded-[2rem]
+            border border-border/60
+            bg-card/40
+            p-2
+            shadow-2xl
+            backdrop-blur-xl
+          "
+        >
           <img
             src={heroImage}
             loading="lazy"
             width={1920}
             height={1104}
             alt="Cola de gorille parmi des produits du terroir"
-            className="absolute inset-2 h-[calc(100%-1rem)] w-[calc(100%-1rem)] rounded-[1.5rem] object-cover object-right"
+            className="
+              absolute inset-2
+              h-[calc(100%-1rem)]
+              w-[calc(100%-1rem)]
+              rounded-[1.5rem]
+              object-cover object-right
+            "
           />
         </div>
 
-        <div className="reveal rounded-[2rem] border border-border/60 bg-card/45 p-7 shadow-xl backdrop-blur-xl md:p-9">
+        <div
+          className="
+            reveal
+            rounded-[2rem]
+            border border-border/60
+            bg-card/45
+            p-7
+            shadow-xl
+            backdrop-blur-xl
+            md:p-9
+          "
+        >
           <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary">
             Découverte traditionnelle
           </p>
@@ -845,7 +1042,15 @@ function GorillaCola() {
           <Button
             asChild
             variant="outline"
-            className="mt-7 h-12 border-primary/40 bg-background/30 text-primary backdrop-blur-xl hover:bg-primary/10"
+            className="
+              mt-7
+              h-12
+              border-primary/40
+              bg-background/30
+              text-primary
+              backdrop-blur-xl
+              hover:bg-primary/10
+            "
           >
             <a
               href={orderUrl("Cola de gorille")}
@@ -884,33 +1089,72 @@ function Liqueurs() {
         />
 
         <div className="grid items-stretch gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-[2rem] border border-primary-foreground/15 bg-primary-foreground/5 p-2 shadow-2xl backdrop-blur-xl">
+          <div
+            className="
+              rounded-[2rem]
+              border border-primary-foreground/15
+              bg-primary-foreground/5
+              p-2
+              shadow-2xl
+              backdrop-blur-xl
+            "
+          >
             <img
               src={liqueurImage}
               loading="lazy"
               width={1408}
               height={1104}
               alt="Sélection de liqueurs artisanales au bissap, gingembre et baobab"
-              className="h-full min-h-[480px] w-full rounded-[1.5rem] object-cover"
+              className="
+                h-full min-h-[480px]
+                w-full
+                rounded-[1.5rem]
+                object-cover
+              "
             />
           </div>
 
-          <div className="rounded-[2rem] border border-primary-foreground/15 bg-primary-foreground/5 p-7 shadow-2xl backdrop-blur-xl md:p-9">
+          <div
+            className="
+              rounded-[2rem]
+              border border-primary-foreground/15
+              bg-primary-foreground/5
+              p-7
+              shadow-2xl
+              backdrop-blur-xl
+              md:p-9
+            "
+          >
             <p className="mb-7 leading-7 text-primary-foreground/65">
               Des recettes artisanales qui révèlent les saveurs locales dans
               un registre généreux et élégant.
             </p>
 
-            <div className="divide-y divide-primary-foreground/10 overflow-hidden rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5">
+            <div
+              className="
+                divide-y divide-primary-foreground/10
+                overflow-hidden
+                rounded-2xl
+                border border-primary-foreground/10
+                bg-primary-foreground/5
+              "
+            >
               {items.map(([name, price]) => (
                 <a
                   key={name}
                   href={orderUrl(`Liqueur ${name}`)}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center justify-between gap-4 px-4 py-4 transition-colors hover:bg-primary-foreground/5 hover:text-gold"
+                  className="
+                    flex items-center justify-between gap-4
+                    px-4 py-4
+                    transition-colors
+                    hover:bg-primary-foreground/5
+                    hover:text-gold
+                  "
                 >
                   <span className="font-display text-xl">{name}</span>
+
                   <span className="text-xs font-semibold uppercase tracking-wider">
                     {price}
                   </span>
@@ -924,7 +1168,13 @@ function Liqueurs() {
 
             <Button
               asChild
-              className="mt-7 bg-gold text-deep shadow-xl shadow-deep/30 hover:bg-gold/90"
+              className="
+                mt-7
+                bg-gold
+                text-deep
+                shadow-xl shadow-deep/30
+                hover:bg-gold/90
+              "
             >
               <a
                 href={whatsappUrl(
@@ -939,7 +1189,18 @@ function Liqueurs() {
           </div>
         </div>
 
-        <p className="mt-7 rounded-xl border border-gold/20 bg-primary-foreground/5 px-4 py-3 text-xs leading-6 text-primary-foreground/65 backdrop-blur-md">
+        <p
+          className="
+            mt-7
+            rounded-xl
+            border border-gold/20
+            bg-primary-foreground/5
+            px-4 py-3
+            text-xs leading-6
+            text-primary-foreground/65
+            backdrop-blur-md
+          "
+        >
           La vente d’alcool est interdite aux mineurs. L’abus d’alcool est
           dangereux pour la santé. À consommer avec modération.
         </p>
@@ -954,7 +1215,16 @@ function HomeMarket() {
       <div className="pointer-events-none absolute -right-20 top-1/2 size-72 -translate-y-1/2 rounded-full bg-background/20 blur-3xl" />
 
       <div className="relative mx-auto flex max-w-7xl flex-col items-start justify-between gap-8 px-5 md:flex-row md:items-center lg:px-8">
-        <div className="rounded-[1.5rem] border border-deep/10 bg-background/10 p-5 backdrop-blur-md">
+        <div
+          className="
+            rounded-[1.5rem]
+            border border-deep/10
+            bg-background/10
+            p-5
+            shadow-lg
+            backdrop-blur-md
+          "
+        >
           <p className="text-xs font-bold uppercase tracking-[0.24em]">
             Marché à domicile
           </p>
@@ -972,7 +1242,13 @@ function HomeMarket() {
         <div className="flex w-full shrink-0 flex-col gap-3 sm:w-auto sm:flex-row">
           <Button
             asChild
-            className="h-12 bg-deep text-primary-foreground shadow-xl hover:bg-deep/90"
+            className="
+              h-12
+              bg-deep
+              text-primary-foreground
+              shadow-xl
+              hover:bg-deep/90
+            "
           >
             <a href={whatsappUrl()} target="_blank" rel="noreferrer">
               Écrire sur WhatsApp
@@ -982,7 +1258,15 @@ function HomeMarket() {
           <Button
             asChild
             variant="outline"
-            className="h-12 border-deep/30 bg-background/10 text-deep backdrop-blur-xl hover:bg-deep hover:text-primary-foreground"
+            className="
+              h-12
+              border-deep/30
+              bg-background/10
+              text-deep
+              backdrop-blur-xl
+              hover:bg-deep
+              hover:text-primary-foreground
+            "
           >
             <a href="tel:+2250749939267">
               <Phone />
@@ -1025,7 +1309,18 @@ function KnowHow() {
           {steps.map(([title, text], index) => (
             <div
               key={title}
-              className="relative rounded-[1.5rem] border border-border/60 bg-card/45 p-7 shadow-lg backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+              className="
+                relative
+                rounded-[1.5rem]
+                border border-border/60
+                bg-card/45
+                p-7
+                shadow-lg
+                backdrop-blur-xl
+                transition-all duration-300
+                hover:-translate-y-1
+                hover:shadow-xl
+              "
             >
               <span className="font-display text-4xl text-gold">
                 0{index + 1}
@@ -1055,9 +1350,11 @@ function Gallery() {
 
     const key = (e: KeyboardEvent) => {
       if (e.key === "Escape") setActive(null);
+
       if (e.key === "ArrowRight") {
         setActive((active + 1) % total);
       }
+
       if (e.key === "ArrowLeft") {
         setActive((active - 1 + total) % total);
       }
@@ -1090,18 +1387,35 @@ function Gallery() {
               key={photo.id}
               onClick={() => setActive(index)}
               aria-label={`Agrandir la photo ${index + 1}`}
-              className={`group h-auto overflow-hidden rounded-2xl border border-border/50 bg-card/30 p-1 shadow-lg backdrop-blur-xl ${
-                index % 5 === 0
-                  ? "col-span-2 row-span-2"
-                  : index % 5 === 3
-                    ? "col-span-2"
-                    : ""
-              }`}
+              className={`
+                group
+                h-auto
+                overflow-hidden
+                rounded-2xl
+                border border-border/50
+                bg-card/30
+                p-1
+                shadow-lg
+                backdrop-blur-xl
+                ${
+                  index % 5 === 0
+                    ? "col-span-2 row-span-2"
+                    : index % 5 === 3
+                      ? "col-span-2"
+                      : ""
+                }
+              `}
             >
               <MediaImage
                 path={photo.image_url}
                 alt={photo.alt_text}
-                className="h-full w-full rounded-xl object-cover transition-transform duration-700 group-hover:scale-105"
+                className="
+                  h-full w-full
+                  rounded-xl
+                  object-cover
+                  transition-transform duration-700
+                  group-hover:scale-105
+                "
               />
             </Button>
           ))}
@@ -1110,7 +1424,13 @@ function Gallery() {
 
       {current && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-deep/90 p-4 backdrop-blur-2xl"
+          className="
+            fixed inset-0 z-50
+            flex items-center justify-center
+            bg-deep/90
+            p-4
+            backdrop-blur-2xl
+          "
           role="dialog"
           aria-modal="true"
           aria-label="Galerie plein écran"
@@ -1118,7 +1438,15 @@ function Gallery() {
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-5 top-5 rounded-xl border border-primary-foreground/10 bg-primary-foreground/10 text-primary-foreground backdrop-blur-xl hover:bg-primary-foreground/20"
+            className="
+              absolute right-5 top-5
+              rounded-xl
+              border border-primary-foreground/10
+              bg-primary-foreground/10
+              text-primary-foreground
+              backdrop-blur-xl
+              hover:bg-primary-foreground/20
+            "
             onClick={() => setActive(null)}
             aria-label="Fermer"
           >
@@ -1128,7 +1456,16 @@ function Gallery() {
           <Button
             variant="ghost"
             size="icon"
-            className="absolute left-3 rounded-xl border border-primary-foreground/10 bg-primary-foreground/10 text-primary-foreground backdrop-blur-xl hover:bg-primary-foreground/20 md:left-8"
+            className="
+              absolute left-3
+              rounded-xl
+              border border-primary-foreground/10
+              bg-primary-foreground/10
+              text-primary-foreground
+              backdrop-blur-xl
+              hover:bg-primary-foreground/20
+              md:left-8
+            "
             onClick={() =>
               setActive(((active ?? 0) - 1 + total) % total)
             }
@@ -1137,19 +1474,44 @@ function Gallery() {
             <ChevronLeft />
           </Button>
 
-          <div className="max-h-[88vh] max-w-[88vw] rounded-[1.5rem] border border-primary-foreground/15 bg-primary-foreground/5 p-2 shadow-2xl backdrop-blur-xl">
+          <div
+            className="
+              max-h-[88vh]
+              max-w-[88vw]
+              rounded-[1.5rem]
+              border border-primary-foreground/15
+              bg-primary-foreground/5
+              p-2
+              shadow-2xl
+              backdrop-blur-xl
+            "
+          >
             <MediaImage
               path={current.image_url}
               alt={current.alt_text}
               loading="eager"
-              className="max-h-[84vh] max-w-[84vw] rounded-xl object-contain"
+              className="
+                max-h-[84vh]
+                max-w-[84vw]
+                rounded-xl
+                object-contain
+              "
             />
           </div>
 
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-3 rounded-xl border border-primary-foreground/10 bg-primary-foreground/10 text-primary-foreground backdrop-blur-xl hover:bg-primary-foreground/20 md:right-8"
+            className="
+              absolute right-3
+              rounded-xl
+              border border-primary-foreground/10
+              bg-primary-foreground/10
+              text-primary-foreground
+              backdrop-blur-xl
+              hover:bg-primary-foreground/20
+              md:right-8
+            "
             onClick={() =>
               setActive(((active ?? 0) + 1) % total)
             }
@@ -1179,7 +1541,17 @@ function VideoPlayer({
       : path.replace("watch?v=", "embed/");
 
     return (
-      <div className="overflow-hidden rounded-[1.5rem] border border-border/60 bg-card/30 p-1 shadow-xl backdrop-blur-xl">
+      <div
+        className="
+          overflow-hidden
+          rounded-[1.5rem]
+          border border-border/60
+          bg-card/30
+          p-1
+          shadow-xl
+          backdrop-blur-xl
+        "
+      >
         <iframe
           src={src}
           title={title}
@@ -1198,7 +1570,17 @@ function VideoPlayer({
   }
 
   return (
-    <div className="overflow-hidden rounded-[1.5rem] border border-border/60 bg-card/30 p-1 shadow-xl backdrop-blur-xl">
+    <div
+      className="
+        overflow-hidden
+        rounded-[1.5rem]
+        border border-border/60
+        bg-card/30
+        p-1
+        shadow-xl
+        backdrop-blur-xl
+      "
+    >
       <video
         src={url}
         controls
@@ -1226,9 +1608,20 @@ function Videos() {
           {data.map((video) => (
             <article
               key={video.id}
-              className="reveal rounded-[1.5rem] border border-border/60 bg-card/40 p-3 shadow-xl backdrop-blur-xl"
+              className="
+                reveal
+                rounded-[1.5rem]
+                border border-border/60
+                bg-card/40
+                p-3
+                shadow-xl
+                backdrop-blur-xl
+              "
             >
-              <VideoPlayer path={video.video_url} title={video.title} />
+              <VideoPlayer
+                path={video.video_url}
+                title={video.title}
+              />
 
               <div className="p-3">
                 <h3 className="font-display text-2xl font-semibold">
@@ -1269,14 +1662,32 @@ function Posts() {
           {data.map((post) => (
             <article
               key={post.id}
-              className="group overflow-hidden rounded-[1.5rem] border border-border/60 bg-card/55 shadow-xl backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl reveal"
+              className="
+                group
+                overflow-hidden
+                rounded-[1.5rem]
+                border border-border/60
+                bg-card/55
+                shadow-xl
+                backdrop-blur-xl
+                transition-all duration-500
+                hover:-translate-y-1
+                hover:shadow-2xl
+                reveal
+              "
             >
               {post.image_url && (
                 <div className="overflow-hidden p-2 pb-0">
                   <MediaImage
                     path={post.image_url}
                     alt={post.title}
-                    className="h-52 w-full rounded-xl object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    className="
+                      h-52 w-full
+                      rounded-xl
+                      object-cover
+                      transition-transform duration-700
+                      group-hover:scale-[1.03]
+                    "
                   />
                 </div>
               )}
@@ -1284,7 +1695,13 @@ function Posts() {
               <div className="p-6">
                 <time
                   dateTime={post.published_at}
-                  className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary"
+                  className="
+                    text-[10px]
+                    font-bold
+                    uppercase
+                    tracking-[0.2em]
+                    text-primary
+                  "
                 >
                   {new Date(post.published_at).toLocaleDateString("fr-FR", {
                     day: "2-digit",
@@ -1345,8 +1762,21 @@ function Contact() {
     );
   };
 
-  const field =
-    "h-12 w-full rounded-xl border border-border/60 bg-background/45 px-4 text-sm outline-none backdrop-blur-xl transition focus:border-primary focus:ring-2 focus:ring-primary/15";
+  const field = `
+    h-12 w-full
+    rounded-xl
+    border border-border/60
+    bg-background/45
+    px-4
+    text-sm
+    outline-none
+    backdrop-blur-xl
+    transition
+    placeholder:text-muted-foreground/50
+    focus:border-primary
+    focus:ring-2
+    focus:ring-primary/15
+  `;
 
   return (
     <section
@@ -1356,7 +1786,17 @@ function Contact() {
       <div className="pointer-events-none absolute left-0 top-1/3 size-96 rounded-full bg-primary/10 blur-3xl" />
 
       <div className="relative mx-auto grid max-w-7xl gap-10 px-5 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
-        <div className="rounded-[2rem] border border-border/60 bg-card/40 p-7 shadow-xl backdrop-blur-xl md:p-9">
+        <div
+          className="
+            rounded-[2rem]
+            border border-border/60
+            bg-card/40
+            p-7
+            shadow-xl
+            backdrop-blur-xl
+            md:p-9
+          "
+        >
           <SectionHeading
             eyebrow="Parlons terroir"
             title="Une question, une commande ?"
@@ -1370,21 +1810,45 @@ function Contact() {
           <div className="mt-9 space-y-4">
             <a
               href="tel:+2250749939267"
-              className="flex items-center gap-4 rounded-xl border border-border/50 bg-background/35 p-3 text-sm font-semibold backdrop-blur-xl transition hover:border-primary/30 hover:bg-primary/5"
+              className="
+                flex items-center gap-4
+                rounded-xl
+                border border-border/50
+                bg-background/35
+                p-3
+                text-sm font-semibold
+                backdrop-blur-xl
+                transition
+                hover:border-primary/30
+                hover:bg-primary/5
+              "
             >
               <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-muted text-primary">
                 <Phone className="size-4" />
               </span>
+
               +225 07 49 93 92 67
             </a>
 
             <a
               href="mailto:zelyagoh@gmail.com"
-              className="flex items-center gap-4 rounded-xl border border-border/50 bg-background/35 p-3 text-sm font-semibold backdrop-blur-xl transition hover:border-primary/30 hover:bg-primary/5"
+              className="
+                flex items-center gap-4
+                rounded-xl
+                border border-border/50
+                bg-background/35
+                p-3
+                text-sm font-semibold
+                backdrop-blur-xl
+                transition
+                hover:border-primary/30
+                hover:bg-primary/5
+              "
             >
               <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-muted text-primary">
                 <Mail className="size-4" />
               </span>
+
               zelyagoh@gmail.com
             </a>
           </div>
@@ -1392,10 +1856,21 @@ function Contact() {
 
         <form
           onSubmit={submit}
-          className="grid gap-5 rounded-[2rem] border border-border/60 bg-muted/45 p-6 shadow-2xl backdrop-blur-2xl md:grid-cols-2 md:p-9"
+          className="
+            grid gap-5
+            rounded-[2rem]
+            border border-border/60
+            bg-muted/45
+            p-6
+            shadow-2xl
+            backdrop-blur-2xl
+            md:grid-cols-2
+            md:p-9
+          "
         >
           <label className="text-xs font-bold uppercase tracking-wider">
             Nom
+
             <input
               name="name"
               maxLength={80}
@@ -1406,6 +1881,7 @@ function Contact() {
 
           <label className="text-xs font-bold uppercase tracking-wider">
             Email
+
             <input
               name="email"
               type="email"
@@ -1417,6 +1893,7 @@ function Contact() {
 
           <label className="text-xs font-bold uppercase tracking-wider md:col-span-2">
             Objet
+
             <input
               name="subject"
               maxLength={100}
@@ -1427,6 +1904,7 @@ function Contact() {
 
           <label className="text-xs font-bold uppercase tracking-wider md:col-span-2">
             Message
+
             <textarea
               name="message"
               maxLength={800}
@@ -1437,7 +1915,10 @@ function Contact() {
           </label>
 
           {error && (
-            <p className="text-sm text-destructive md:col-span-2" role="alert">
+            <p
+              className="text-sm text-destructive md:col-span-2"
+              role="alert"
+            >
               {error}
             </p>
           )}
@@ -1461,7 +1942,15 @@ function Footer() {
       <div className="pointer-events-none absolute right-0 top-0 size-80 rounded-full bg-primary/10 blur-3xl" />
 
       <div className="relative mx-auto grid max-w-7xl gap-8 px-5 py-14 md:grid-cols-3 lg:px-8">
-        <div className="rounded-[1.5rem] border border-primary-foreground/10 bg-primary-foreground/5 p-6 backdrop-blur-xl">
+        <div
+          className="
+            rounded-[1.5rem]
+            border border-primary-foreground/10
+            bg-primary-foreground/5
+            p-6
+            backdrop-blur-xl
+          "
+        >
           <Logo inverse />
 
           <p className="mt-5 max-w-xs text-sm leading-6 text-primary-foreground/55">
@@ -1470,7 +1959,15 @@ function Footer() {
           </p>
         </div>
 
-        <div className="rounded-[1.5rem] border border-primary-foreground/10 bg-primary-foreground/5 p-6 backdrop-blur-xl">
+        <div
+          className="
+            rounded-[1.5rem]
+            border border-primary-foreground/10
+            bg-primary-foreground/5
+            p-6
+            backdrop-blur-xl
+          "
+        >
           <p className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-gold">
             Explorer
           </p>
@@ -1479,7 +1976,13 @@ function Footer() {
             <a
               key={href}
               href={href}
-              className="mb-2 block text-sm text-primary-foreground/65 transition-colors hover:text-gold"
+              className="
+                mb-2 block
+                text-sm
+                text-primary-foreground/65
+                transition-colors
+                hover:text-gold
+              "
             >
               {label}
             </a>
@@ -1487,34 +1990,69 @@ function Footer() {
 
           <Link
             to="/admin"
-            className="mt-2 block text-sm text-primary-foreground/45 transition-colors hover:text-gold"
+            className="
+              mt-2 block
+              text-sm
+              text-primary-foreground/45
+              transition-colors
+              hover:text-gold
+            "
           >
             Espace administration
           </Link>
         </div>
 
-        <div className="rounded-[1.5rem] border border-primary-foreground/10 bg-primary-foreground/5 p-6 backdrop-blur-xl">
+        <div
+          className="
+            rounded-[1.5rem]
+            border border-primary-foreground/10
+            bg-primary-foreground/5
+            p-6
+            backdrop-blur-xl
+          "
+        >
           <p className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-gold">
             Nous contacter
           </p>
 
           <a
             href="tel:+2250749939267"
-            className="mb-2 block text-sm text-primary-foreground/65 transition-colors hover:text-gold"
+            className="
+              mb-2 block
+              text-sm
+              text-primary-foreground/65
+              transition-colors
+              hover:text-gold
+            "
           >
             +225 07 49 93 92 67
           </a>
 
           <a
             href="mailto:zelyagoh@gmail.com"
-            className="block text-sm text-primary-foreground/65 transition-colors hover:text-gold"
+            className="
+              block
+              text-sm
+              text-primary-foreground/65
+              transition-colors
+              hover:text-gold
+            "
           >
             zelyagoh@gmail.com
           </a>
         </div>
       </div>
 
-      <div className="relative border-t border-primary-foreground/10 px-5 py-5 text-center text-[11px] text-primary-foreground/45">
+      <div
+        className="
+          relative
+          border-t border-primary-foreground/10
+          px-5 py-5
+          text-center
+          text-[11px]
+          text-primary-foreground/45
+        "
+      >
         © 2026 O’TERROIR by Stéphanie. Tous droits réservés.
       </div>
     </footer>
@@ -1550,7 +2088,18 @@ function HomePage() {
         target="_blank"
         rel="noreferrer"
         aria-label="Contacter O’TERROIR sur WhatsApp"
-        className="fixed bottom-5 right-5 z-40 grid size-14 place-items-center rounded-full border border-primary-foreground/20 bg-primary text-primary-foreground shadow-2xl shadow-primary/25 transition-all duration-300 hover:-translate-y-1 hover:scale-105"
+        className="
+          fixed bottom-5 right-5 z-40
+          grid size-14 place-items-center
+          rounded-full
+          border border-primary-foreground/20
+          bg-primary
+          text-primary-foreground
+          shadow-2xl shadow-primary/25
+          transition-all duration-300
+          hover:-translate-y-1
+          hover:scale-105
+        "
       >
         <Sparkles className="size-6" />
       </a>
