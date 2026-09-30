@@ -132,87 +132,93 @@ function Header() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-40 px-3 pt-3 sm:px-5 lg:px-8">
-      <div
-        className={`mx-auto max-w-7xl overflow-hidden rounded-2xl border border-white/20 bg-background/65 shadow-[0_18px_50px_-20px_rgba(0,0,0,0.35)] backdrop-blur-2xl ring-1 ring-white/10 transition-all duration-500 ease-out ${
-          open
-            ? "translate-y-0 scale-[1.01] shadow-[0_24px_70px_-25px_rgba(0,0,0,0.45)]"
-            : "translate-y-0 scale-100"
-        }`}
-      >
-        <div className="flex h-[72px] items-center justify-between px-4 sm:px-5 lg:px-6">
+      <div className="mx-auto max-w-7xl overflow-hidden rounded-2xl border border-white/20 bg-background/65 shadow-[0_18px_50px_-20px_rgba(0,0,0,0.35)] backdrop-blur-2xl ring-1 ring-white/10">
+        <div className="flex min-h-[72px] items-center justify-between gap-3 px-4 sm:px-5 lg:px-6">
           <Logo />
 
+          {/* Navigation desktop */}
           <nav
             aria-label="Navigation principale"
             className="hidden items-center gap-1 rounded-full border border-white/15 bg-background/35 p-1 backdrop-blur-xl lg:flex"
           >
-            {navLinks.map(([label, href], index) => (
+            {navLinks.map(([label, href]) => (
               <a
                 key={href}
                 href={href}
-                className="group relative overflow-hidden rounded-full px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-foreground/70 transition-all duration-300 hover:bg-primary/10 hover:text-primary"
-                style={{
-                  animation: `headerSlideIn 500ms ${
-                    index * 70
-                  }ms cubic-bezier(0.22, 1, 0.36, 1) both`,
-                }}
+                className="rounded-full px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-foreground/70 transition-all duration-300 hover:bg-primary/10 hover:text-primary"
               >
-                <span className="relative z-10">{label}</span>
-                <span className="absolute inset-x-4 bottom-1 h-px origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100" />
+                {label}
               </a>
             ))}
 
             <a
               href="#contact"
-              className="group relative ml-1 overflow-hidden rounded-full border border-primary/20 bg-primary/10 px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.12em] text-primary transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/20"
-              style={{
-                animation:
-                  "headerSlideIn 500ms 350ms cubic-bezier(0.22, 1, 0.36, 1) both",
-              }}
+              className="rounded-full bg-primary/10 px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.12em] text-primary transition-all duration-300 hover:bg-primary hover:text-primary-foreground"
             >
-              <span className="relative z-10">Contact</span>
-              <span className="absolute inset-0 -translate-x-full bg-primary-foreground/10 transition-transform duration-500 group-hover:translate-x-full" />
+              Contact
             </a>
           </nav>
 
-          <div className="hidden items-center gap-2 sm:flex">
-            <Button
-              asChild
-              variant="ghost"
-              className="h-10 rounded-full border border-transparent px-4 text-foreground/75 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/20 hover:bg-primary/10 hover:text-primary"
+          {/* Actions desktop */}
+          <div className="hidden items-center gap-2 xl:flex">
+            <a
+              href={`tel:${PHONE}`}
+              className="flex items-center gap-2 rounded-full border border-primary/15 bg-background/40 px-4 py-2.5 text-xs font-semibold text-foreground/75 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
             >
-              <a href="#contact">
-                <Mail />
-                <span>Contact</span>
-              </a>
-            </Button>
+              <Phone className="size-4" />
+              <span>+225 07 49 93 92 67</span>
+            </a>
 
             <Button
               asChild
-              variant="ghost"
-              className="h-10 rounded-full border border-transparent px-4 text-foreground/75 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/20 hover:bg-primary/10 hover:text-primary"
+              className="h-10 rounded-full border border-primary/30 bg-primary/90 px-5 shadow-[0_8px_25px_-8px_hsl(var(--primary))] transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary"
             >
-              <a href={`tel:${PHONE}`}>
-                <Phone />
-                <span className="hidden xl:inline">Appeler</span>
-              </a>
-            </Button>
-
-            <Button
-              asChild
-              className="h-10 rounded-full border border-primary/30 bg-primary/90 px-5 shadow-[0_8px_25px_-8px_hsl(var(--primary))] transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary hover:shadow-[0_12px_30px_-8px_hsl(var(--primary))]"
-            >
-              <a href={whatsappUrl()} target="_blank" rel="noreferrer">
+              <a
+                href={whatsappUrl()}
+                target="_blank"
+                rel="noreferrer"
+              >
                 <ShoppingBag />
                 <span>WhatsApp</span>
               </a>
             </Button>
           </div>
 
+          {/* Actions tablette */}
+          <div className="hidden items-center gap-2 sm:flex xl:hidden">
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="rounded-full border-primary/25 bg-background/40 text-primary backdrop-blur-xl"
+            >
+              <a href={`tel:${PHONE}`}>
+                <Phone />
+                <span>Appeler</span>
+              </a>
+            </Button>
+
+            <Button
+              asChild
+              size="sm"
+              className="rounded-full"
+            >
+              <a
+                href={whatsappUrl()}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <ShoppingBag />
+                WhatsApp
+              </a>
+            </Button>
+          </div>
+
+          {/* Menu mobile */}
           <Button
             variant="ghost"
             size="icon"
-            className="size-11 rounded-full border border-white/15 bg-background/40 backdrop-blur-md transition-all duration-300 hover:rotate-3 hover:bg-primary/10 hover:text-primary lg:hidden"
+            className="size-11 rounded-full border border-white/15 bg-background/40 backdrop-blur-md hover:bg-primary/10 hover:text-primary sm:hidden"
             onClick={() => setOpen(!open)}
             aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
           >
@@ -221,28 +227,17 @@ function Header() {
         </div>
 
         {open && (
-          <div
-            className="border-t border-white/15 bg-background/45 p-3 backdrop-blur-2xl"
-            style={{
-              animation:
-                "headerMenuSlide 400ms cubic-bezier(0.22, 1, 0.36, 1) both",
-            }}
-          >
+          <div className="border-t border-white/15 bg-background/45 p-3 backdrop-blur-2xl">
             <nav
               aria-label="Navigation mobile"
               className="flex flex-col gap-1 rounded-xl border border-white/15 bg-background/30 p-2"
             >
-              {navLinks.map(([label, href], index) => (
+              {navLinks.map(([label, href]) => (
                 <a
                   key={href}
                   href={href}
                   onClick={() => setOpen(false)}
                   className="rounded-xl px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.1em] text-foreground/75 transition-all duration-300 hover:translate-x-1 hover:bg-primary/10 hover:text-primary"
-                  style={{
-                    animation: `headerMobileItem 400ms ${
-                      index * 55
-                    }ms cubic-bezier(0.22, 1, 0.36, 1) both`,
-                  }}
                 >
                   {label}
                 </a>
@@ -251,39 +246,30 @@ function Header() {
               <a
                 href="#contact"
                 onClick={() => setOpen(false)}
-                className="rounded-xl border border-primary/20 bg-primary/10 px-4 py-3.5 text-sm font-bold uppercase tracking-[0.1em] text-primary transition-all duration-300 hover:translate-x-1 hover:bg-primary hover:text-primary-foreground"
-                style={{
-                  animation:
-                    "headerMobileItem 400ms 275ms cubic-bezier(0.22, 1, 0.36, 1) both",
-                }}
+                className="rounded-xl bg-primary/10 px-4 py-3.5 text-sm font-bold uppercase tracking-[0.1em] text-primary transition-all duration-300 hover:bg-primary hover:text-primary-foreground"
               >
                 Contact
               </a>
             </nav>
 
-            <div
-              className="mt-3 grid grid-cols-2 gap-2"
-              style={{
-                animation:
-                  "headerMenuSlide 450ms 100ms cubic-bezier(0.22, 1, 0.36, 1) both",
-              }}
-            >
-              <Button
-                asChild
-                variant="outline"
-                className="h-11 rounded-xl border-primary/25 bg-background/35 text-primary backdrop-blur-md hover:bg-primary/10"
+            <div className="mt-3 space-y-2">
+              <a
+                href={`tel:${PHONE}`}
+                className="flex h-11 items-center justify-center gap-2 rounded-xl border border-primary/20 bg-background/40 text-sm font-semibold text-primary backdrop-blur-xl"
               >
-                <a href={`tel:${PHONE}`}>
-                  <Phone />
-                  Appeler
-                </a>
-              </Button>
+                <Phone className="size-4" />
+                +225 07 49 93 92 67
+              </a>
 
               <Button
                 asChild
-                className="h-11 rounded-xl bg-primary/90 shadow-md"
+                className="h-11 w-full rounded-xl bg-primary/90"
               >
-                <a href={whatsappUrl()} target="_blank" rel="noreferrer">
+                <a
+                  href={whatsappUrl()}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <ShoppingBag />
                   WhatsApp
                 </a>
@@ -292,51 +278,6 @@ function Header() {
           </div>
         )}
       </div>
-
-      <style>{`
-        @keyframes headerSlideIn {
-          from {
-            opacity: 0;
-            transform: translateX(-18px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        @keyframes headerMenuSlide {
-          from {
-            opacity: 0;
-            transform: translateY(-14px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes headerMobileItem {
-          from {
-            opacity: 0;
-            transform: translateX(-14px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          *,
-          *::before,
-          *::after {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-          }
-        }
-      `}</style>
     </header>
   );
 }
@@ -1487,44 +1428,62 @@ function Posts() {
           {data.map((post) => (
             <article
               key={post.id}
-              className="group overflow-hidden rounded-[1.5rem] border border-border/60 bg-card/55 shadow-xl backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl reveal"
+              className="group overflow-hidden rounded-[1.5rem] border border-border/60 bg-card/55 shadow-xl backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl"
             >
+              {/* IMAGE */}
               {post.image_url && (
-                <div className="overflow-hidden p-2 pb-0">
+                <div className="p-2 pb-0">
                   <ClickableImage
                     src={post.image_url}
                     alt={post.title}
-                    buttonClassName="relative w-full overflow-hidden rounded-xl"
-                    className="h-52 w-full rounded-xl object-cover"
+                    buttonClassName="relative block w-full overflow-hidden rounded-xl"
+                    className="block h-56 w-full rounded-xl object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                   />
-
-                  <div className="pointer-events-none relative -mt-12 mx-3 mb-3 flex justify-end">
-                    <span className="rounded-full border border-white/20 bg-deep/50 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-lg backdrop-blur-md">
-                      Agrandir
-                    </span>
-                  </div>
                 </div>
               )}
 
+              {/* CONTENU */}
               <div className="p-6">
                 <time
                   dateTime={post.published_at}
                   className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary"
                 >
-                  {new Date(post.published_at).toLocaleDateString("fr-FR", {
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric",
-                  })}
+                  {new Date(post.published_at).toLocaleDateString(
+                    "fr-FR",
+                    {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    },
+                  )}
                 </time>
 
                 <h3 className="mt-2 font-display text-2xl font-semibold transition-colors duration-300 group-hover:text-primary">
                   {post.title}
                 </h3>
 
-                <p className="mt-3 whitespace-pre-line text-sm leading-7 text-muted-foreground">
-                  {post.body}
-                </p>
+                {post.body && (
+                  <p className="mt-3 whitespace-pre-line text-sm leading-7 text-muted-foreground">
+                    {post.body}
+                  </p>
+                )}
+
+                {/* indication discrète */}
+                {post.image_url && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const imageButton = document.querySelector(
+                        `button[aria-label="Agrandir : ${CSS.escape(post.title)}"]`,
+                      ) as HTMLButtonElement | null;
+
+                      imageButton?.click();
+                    }}
+                    className="mt-5 text-[10px] font-bold uppercase tracking-[0.18em] text-primary transition-colors hover:text-primary/70"
+                  >
+                    Voir l'image en grand →
+                  </button>
+                )}
               </div>
             </article>
           ))}
