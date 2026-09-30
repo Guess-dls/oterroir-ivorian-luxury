@@ -37,7 +37,7 @@ import heroImage from "@/assets/oterroir-hero.jpg";
 import riceImage from "@/assets/riz_noir.png";
 import cornImage from "@/assets/mais-violet.jpg";
 import liqueurImage from "@/assets/liqueurs.jpg";
-import colaGorilleImage from "@/assets/cola.png";
+import colaGorilleImage from "@/assets/colla.png";
 
 const BRAND_NAME = "O’TERROIR";
 const BRAND_SUBTITLE = "by Stéphanie";
