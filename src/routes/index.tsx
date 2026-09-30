@@ -1428,21 +1428,17 @@ function Posts() {
           {data.map((post) => (
             <article
               key={post.id}
-              className="group overflow-hidden rounded-[1.5rem] border border-border/60 bg-card/55 shadow-xl backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl"
+              className="group overflow-hidden rounded-[1.5rem] border border-border/60 bg-card/55 shadow-xl backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl reveal"
             >
-              {/* IMAGE */}
               {post.image_url && (
-                <div className="p-2 pb-0">
-                  <ClickableImage
-                    src={post.image_url}
+                <div className="relative overflow-hidden p-2 pb-0">
+                  <PostImage
+                    path={post.image_url}
                     alt={post.title}
-                    buttonClassName="relative block w-full overflow-hidden rounded-xl"
-                    className="block h-56 w-full rounded-xl object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                   />
                 </div>
               )}
 
-              {/* CONTENU */}
               <div className="p-6">
                 <time
                   dateTime={post.published_at}
@@ -1466,23 +1462,6 @@ function Posts() {
                   <p className="mt-3 whitespace-pre-line text-sm leading-7 text-muted-foreground">
                     {post.body}
                   </p>
-                )}
-
-                {/* indication discrète */}
-                {post.image_url && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const imageButton = document.querySelector(
-                        `button[aria-label="Agrandir : ${CSS.escape(post.title)}"]`,
-                      ) as HTMLButtonElement | null;
-
-                      imageButton?.click();
-                    }}
-                    className="mt-5 text-[10px] font-bold uppercase tracking-[0.18em] text-primary transition-colors hover:text-primary/70"
-                  >
-                    Voir l'image en grand →
-                  </button>
                 )}
               </div>
             </article>
