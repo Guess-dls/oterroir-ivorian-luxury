@@ -399,73 +399,361 @@ function PhotosPanel() {
 
 type VideoDraft = Omit<DbVideo, "id"> & { id?: string };
 
+function VideoPreview({
+  path,
+  title,
+  thumbnail,
+}: {
+  path: string;
+  title: string;
+  thumbnail?: string | null;
+}) {
+  const resolvedVideoUrl = useMediaUrl(
+    path && !path.startsWith("http") ? path : null,
+  );
+
+  const resolvedThumbnailUrl = useMediaUrl(
+    thumbnail && !thumbnail.startsWith("http") ? thumbnail : null,
+  );
+
+  const youtubeId = path.match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([^?&/]+)/,
+  )?.[1];
+
+  const vimeoId = path.match(
+    /(?:vimeo\.com\/(?:video\/)?|player\.vimeo.com\/video\/)(\d+)/,
+  )?.[1];
+
+  if (youtubeId) {
+    return (
+      <div className="aspect-video w-full overflow-hidden rounded-2xl bg-black ring-1 ring-border/60">
+        <iframe
+          src={`https://www.youtube.com/embed/${youtubeId}`}
+          title={title}
+          className="h-full w-full"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        />
+      </div>
+    );
+  }
+
+  if (vimeoId) {
+    return (
+      <div className="aspect-video w-full overflow-hidden rounded-2xl bg-black ring-1 ring-border/60">
+        <iframe
+          src={`https://player.vimeo.com/video/${vimeoId}`}
+          title={title}
+          className="h-full w-full"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowFullScreen
+        />
+      </div>
+    );
+  }
+
+  const videoUrl =
+    resolvedVideoUrl ??
+    (path.startsWith("http") ? path : undefined);
+
+  if (!videoUrl) {
+    return (
+      <div className="grid aspect-video w-full place-items-center rounded-2xl border border-border/60 bg-muted/30">
+        <div className="text-center">
+          <Video className="mx-auto size-8 text-muted-foreground" />
+          <p className="mt-2 text-xs text-muted-foreground">
+            Aperçu indisponible
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-hidden rounded-2xl bg-black ring-1 ring-border/60">
+      <video
+        src={videoUrl}
+        controls
+        preload="metadata"
+        poster={resolvedThumbnailUrl ?? thumbnail ?? undefined}
+        className="aspect-video w-full object-contain"
+      >
+        Votre navigateur ne prend pas en charge la lecture vidéo.
+      </video>
+    </div>
+  );
+}
+
 function VideosPanel() {
   const queryClient = useQueryClient();
   const { data = [] } = useQuery(videosQuery(true));
   const [draft, setDraft] = useState<VideoDraft | null>(null);
-  const refresh = () => queryClient.invalidateQueries({ queryKey: ["videos"] });
+
+  const refresh = () =>
+    queryClient.invalidateQueries({ queryKey: ["videos"] });
 
   const save = async () => {
     if (!draft) return;
-    if (!draft.title.trim()) throw new Error("Le titre est obligatoire.");
-    if (!draft.video_url) throw new Error("Ajoutez un fichier vidéo ou un lien.");
-    const payload = { title: draft.title.trim(), description: draft.description, video_url: draft.video_url, thumbnail_url: draft.thumbnail_url, sort_order: draft.sort_order, is_visible: draft.is_visible };
-    const { error } = draft.id ? await supabase.from("videos").update(payload).eq("id", draft.id) : await supabase.from("videos").insert(payload);
+
+    if (!draft.title.trim()) {
+      throw new Error("Le titre est obligatoire.");
+    }
+
+    if (!draft.video_url) {
+      throw new Error("Ajoutez un fichier vidéo ou un lien.");
+    }
+
+    const payload = {
+      title: draft.title.trim(),
+      description: draft.description,
+      video_url: draft.video_url,
+      thumbnail_url: draft.thumbnail_url,
+      sort_order: draft.sort_order,
+      is_visible: draft.is_visible,
+    };
+
+    const { error } = draft.id
+      ? await supabase
+          .from("videos")
+          .update(payload)
+          .eq("id", draft.id)
+      : await supabase.from("videos").insert(payload);
+
     if (error) throw error;
+
     toast.success("Vidéo enregistrée.");
     refresh();
   };
 
   const remove = async (video: DbVideo) => {
     if (!confirm(`Supprimer « ${video.title} » ?`)) return;
-    const { error } = await supabase.from("videos").delete().eq("id", video.id);
-    if (error) { toast.error(error.message); return; }
+
+    const { error } = await supabase
+      .from("videos")
+      .delete()
+      .eq("id", video.id);
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
     await removeMedia(video.video_url);
     await removeMedia(video.thumbnail_url);
+
     toast.success("Vidéo supprimée.");
     refresh();
   };
 
   return (
     <div>
-      <Button className="mb-5 rounded-xl shadow-sm" onClick={() => setDraft({ title: "", description: "", video_url: "", thumbnail_url: null, sort_order: (data.at(-1)?.sort_order ?? 0) + 10, is_visible: true })}>
-        <Plus /> Ajouter une vidéo
-      </Button>
-      <div className="overflow-hidden rounded-2xl border border-border/70 bg-background shadow-sm">
-        {data.map((video) => (
-          <div key={video.id} className="group flex items-center gap-4 border-b border-border/60 p-4 transition-colors last:border-0 hover:bg-muted/30 sm:p-5">
-            <div className="min-w-0 flex-1">
-              <p className="truncate font-display text-lg font-semibold sm:text-xl">{video.title}</p>
-              <p className="truncate text-sm text-muted-foreground">{video.video_url}{!video.is_visible && " · masquée"}</p>
-            </div>
-            <RowActions onEdit={() => setDraft(video)} onDelete={() => remove(video)} />
-          </div>
-        ))}
-        {data.length === 0 && <p className="p-6 text-sm text-muted-foreground">Aucune vidéo pour le moment.</p>}
+      <div className="mb-6 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+        <div>
+          <h2 className="font-display text-2xl font-semibold tracking-tight">
+            Vidéos
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Gérez les vidéos visibles sur le site.
+          </p>
+        </div>
+
+        <Button
+          className="rounded-xl shadow-sm"
+          onClick={() =>
+            setDraft({
+              title: "",
+              description: "",
+              video_url: "",
+              thumbnail_url: null,
+              sort_order: (data.at(-1)?.sort_order ?? 0) + 10,
+              is_visible: true,
+            })
+          }
+        >
+          <Plus />
+          Ajouter une vidéo
+        </Button>
       </div>
 
+      {data.length > 0 ? (
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {data.map((video) => (
+            <article
+              key={video.id}
+              className="group overflow-hidden rounded-2xl border border-border/70 bg-background shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            >
+              <VideoPreview
+                path={video.video_url}
+                title={video.title}
+                thumbnail={video.thumbnail_url}
+              />
+
+              <div className="space-y-4 p-5">
+                <div className="min-w-0">
+                  <div className="mb-2 flex items-center gap-2">
+                    <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-primary">
+                      Vidéo
+                    </span>
+
+                    {!video.is_visible && (
+                      <span className="rounded-full bg-muted px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                        Masquée
+                      </span>
+                    )}
+                  </div>
+
+                  <h3 className="truncate font-display text-lg font-semibold">
+                    {video.title}
+                  </h3>
+
+                  {video.description && (
+                    <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                      {video.description}
+                    </p>
+                  )}
+
+                  <p className="mt-3 truncate text-xs text-muted-foreground">
+                    {video.video_url}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-between gap-3 border-t border-border/60 pt-4">
+                  <span className="text-xs text-muted-foreground">
+                    Ordre : {video.sort_order}
+                  </span>
+
+                  <RowActions
+                    onEdit={() => setDraft(video)}
+                    onDelete={() => remove(video)}
+                  />
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-dashed border-border/70 bg-background/60 p-10 text-center">
+          <Video className="mx-auto size-10 text-muted-foreground" />
+
+          <h3 className="mt-4 font-display text-lg font-semibold">
+            Aucune vidéo
+          </h3>
+
+          <p className="mt-1 text-sm text-muted-foreground">
+            Ajoutez votre première vidéo pour l'afficher ici.
+          </p>
+        </div>
+      )}
+
       {draft && (
-        <EditorDialog open onOpenChange={(open) => !open && setDraft(null)} title={draft.id ? "Modifier la vidéo" : "Nouvelle vidéo"} onSubmit={save}>
+        <EditorDialog
+          open
+          onOpenChange={(open) => !open && setDraft(null)}
+          title={
+            draft.id
+              ? "Modifier la vidéo"
+              : "Nouvelle vidéo"
+          }
+          onSubmit={save}
+        >
           <div className="space-y-2.5">
             <Label htmlFor="v-title">Titre</Label>
-            <Input id="v-title" value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
+
+            <Input
+              id="v-title"
+              value={draft.title}
+              onChange={(e) =>
+                setDraft({
+                  ...draft,
+                  title: e.target.value,
+                })
+              }
+            />
           </div>
+
           <div className="space-y-2.5">
             <Label htmlFor="v-desc">Description</Label>
-            <Textarea id="v-desc" rows={3} value={draft.description} onChange={(e) => setDraft({ ...draft, description: e.target.value })} />
+
+            <Textarea
+              id="v-desc"
+              rows={3}
+              value={draft.description}
+              onChange={(e) =>
+                setDraft({
+                  ...draft,
+                  description: e.target.value,
+                })
+              }
+            />
           </div>
-          <MediaField label="Fichier vidéo" folder="videos" value={draft.video_url || null} onChange={(path) => setDraft({ ...draft, video_url: path ?? "" })} />
+
+          <MediaField
+            label="Fichier vidéo"
+            folder="videos"
+            value={draft.video_url || null}
+            onChange={(path) =>
+              setDraft({
+                ...draft,
+                video_url: path ?? "",
+              })
+            }
+          />
+
           <div className="space-y-2.5">
-            <Label htmlFor="v-url">…ou lien YouTube / Vimeo</Label>
-            <Input id="v-url" placeholder="https://youtu.be/…" value={draft.video_url.startsWith("http") ? draft.video_url : ""} onChange={(e) => setDraft({ ...draft, video_url: e.target.value })} />
+            <Label htmlFor="v-url">
+              …ou lien YouTube / Vimeo
+            </Label>
+
+            <Input
+              id="v-url"
+              placeholder="https://youtu.be/…"
+              value={
+                draft.video_url.startsWith("http")
+                  ? draft.video_url
+                  : ""
+              }
+              onChange={(e) =>
+                setDraft({
+                  ...draft,
+                  video_url: e.target.value,
+                })
+              }
+            />
           </div>
+
           <div className="space-y-2.5">
-            <Label htmlFor="v-order">Ordre d’affichage</Label>
-            <Input id="v-order" type="number" value={draft.sort_order} onChange={(e) => setDraft({ ...draft, sort_order: Number(e.target.value) })} />
+            <Label htmlFor="v-order">
+              Ordre d’affichage
+            </Label>
+
+            <Input
+              id="v-order"
+              type="number"
+              value={draft.sort_order}
+              onChange={(e) =>
+                setDraft({
+                  ...draft,
+                  sort_order: Number(e.target.value),
+                })
+              }
+            />
           </div>
+
           <div className="flex items-center gap-3 rounded-xl border border-border/70 bg-muted/20 p-3">
-            <Switch id="v-visible" checked={draft.is_visible} onCheckedChange={(checked) => setDraft({ ...draft, is_visible: checked })} />
-            <Label htmlFor="v-visible">Visible sur le site</Label>
+            <Switch
+              id="v-visible"
+              checked={draft.is_visible}
+              onCheckedChange={(checked) =>
+                setDraft({
+                  ...draft,
+                  is_visible: checked,
+                })
+              }
+            />
+
+            <Label htmlFor="v-visible">
+              Visible sur le site
+            </Label>
           </div>
         </EditorDialog>
       )}
