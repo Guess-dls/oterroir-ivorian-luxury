@@ -10,7 +10,6 @@ import {
   Menu,
   Phone,
   ShoppingBag,
-  Sparkles,
   X,
 } from "lucide-react";
 import { z } from "zod";
@@ -1771,18 +1770,6 @@ function HomePage() {
       </main>
 
       <Footer />
-
-      <a
-        href={whatsappUrl()}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Contacter O’TERROIR sur WhatsApp"
-        className="fixed bottom-5 right-5 z-40 grid size-14 place-items-center rounded-full border border-primary-foreground/20 bg-primary text-primary-foreground shadow-2xl shadow-primary/25 transition-all duration-300 hover:-translate-y-1 hover:scale-105"
-      >
-        <Sparkles className="size-6" />
-      </a>
-
-      <ChatWidget />
     </div>
   );
 }
