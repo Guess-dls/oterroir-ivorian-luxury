@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
 import { toast } from "sonner";
-import { Loader2, Pencil, Plus, Trash2, Upload } from "lucide-react";
+import { Loader2, Pencil, Plus, Trash2, Upload, Eye, ImageIcon, Video, FileText, MessageSquare, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -55,11 +55,11 @@ function useIsAdmin() {
 function MediaField({ value, onChange, folder, label }: { value: string | null; onChange: (path: string | null) => void; folder: string; label: string }) {
   const [busy, setBusy] = useState(false);
   return (
-    <div className="space-y-2">
+    <div className="space-y-2.5">
       <Label>{label}</Label>
-      <div className="flex items-center gap-3">
-        {value ? <MediaImage path={value} alt="Aperçu" className="size-16 rounded-sm object-cover" /> : <div className="grid size-16 place-items-center rounded-sm bg-muted text-muted-foreground"><Upload className="size-4" /></div>}
-        <label className="cursor-pointer rounded-sm border border-border px-3 py-2 text-sm">
+      <div className="flex items-center gap-3 rounded-xl border border-border/70 bg-muted/20 p-3">
+        {value ? <MediaImage path={value} alt="Aperçu" className="size-16 rounded-lg object-cover ring-1 ring-border" /> : <div className="grid size-16 place-items-center rounded-lg bg-muted text-muted-foreground ring-1 ring-border"><Upload className="size-4" /></div>}
+        <label className="cursor-pointer rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-muted">
           {busy ? "Envoi…" : "Choisir un fichier"}
           <input
             type="file"
@@ -94,12 +94,12 @@ function EditorDialog({ open, onOpenChange, title, onSubmit, children }: { open:
   const [saving, setSaving] = useState(false);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
+      <DialogContent className="max-h-[90vh] overflow-y-auto rounded-2xl border-border/70 p-0 sm:max-w-xl">
+        <DialogHeader className="border-b border-border/70 bg-muted/30 px-6 py-5">
+          <DialogTitle className="text-xl">{title}</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">{children}</div>
-        <DialogFooter>
+        <div className="space-y-5 px-6 py-6">{children}</div>
+        <DialogFooter className="border-t border-border/70 bg-muted/20 px-6 py-4">
           <Button variant="outline" onClick={() => onOpenChange(false)}>Annuler</Button>
           <Button
             disabled={saving}
@@ -125,7 +125,7 @@ function EditorDialog({ open, onOpenChange, title, onSubmit, children }: { open:
 
 function RowActions({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => void }) {
   return (
-    <div className="flex shrink-0 gap-1">
+    <div className="flex shrink-0 gap-1 rounded-lg border border-border/60 bg-background p-1 shadow-sm">
       <Button variant="ghost" size="icon" onClick={onEdit} aria-label="Modifier"><Pencil className="size-4" /></Button>
       <Button variant="ghost" size="icon" onClick={onDelete} aria-label="Supprimer"><Trash2 className="size-4 text-destructive" /></Button>
     </div>
@@ -175,20 +175,20 @@ function ProductsPanel() {
   return (
     <div>
       <Button
-        className="mb-5"
+        className="mb-5 rounded-xl shadow-sm"
         onClick={() =>
           setDraft({ name: "", category: "PRODUITS DU TERROIR", description: "", price: "Prix sur demande", image_url: null, asset_key: null, image_position: null, sort_order: (data.at(-1)?.sort_order ?? 0) + 10, is_visible: true })
         }
       >
         <Plus /> Ajouter un produit
       </Button>
-      <div className="divide-y divide-border rounded-sm border border-border">
+      <div className="overflow-hidden rounded-2xl border border-border/70 bg-background shadow-sm">
         {data.map((product) => (
-          <div key={product.id} className="flex items-center gap-4 p-4">
-            <MediaImage path={product.image_url} fallback={assetMap[product.asset_key ?? "hero"]} objectPosition={product.image_position} alt={product.name} className="size-16 shrink-0 rounded-sm object-cover" />
+          <div key={product.id} className="group flex items-center gap-4 border-b border-border/60 p-4 transition-colors last:border-0 hover:bg-muted/30 sm:p-5">
+            <MediaImage path={product.image_url} fallback={assetMap[product.asset_key ?? "hero"]} objectPosition={product.image_position} alt={product.name} className="size-16 shrink-0 rounded-xl object-cover ring-1 ring-border/70 sm:size-20" />
             <div className="min-w-0 flex-1">
               <p className="text-[10px] font-bold uppercase tracking-widest text-primary">{product.category}</p>
-              <p className="truncate font-display text-xl font-semibold">{product.name}</p>
+              <p className="truncate font-display text-lg font-semibold sm:text-xl">{product.name}</p>
               <p className="text-sm text-muted-foreground">{product.price}{!product.is_visible && " · masqué"}</p>
             </div>
             <RowActions onEdit={() => setDraft(product)} onDelete={() => remove(product)} />
@@ -199,30 +199,30 @@ function ProductsPanel() {
 
       {draft && (
         <EditorDialog open onOpenChange={(open) => !open && setDraft(null)} title={draft.id ? "Modifier le produit" : "Nouveau produit"} onSubmit={save}>
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <Label htmlFor="p-name">Nom</Label>
             <Input id="p-name" value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <Label htmlFor="p-cat">Catégorie</Label>
             <select id="p-cat" className="h-10 w-full rounded-sm border border-border bg-background px-3 text-sm" value={draft.category} onChange={(e) => setDraft({ ...draft, category: e.target.value })}>
               {CATEGORIES.map((category) => <option key={category} value={category}>{category}</option>)}
             </select>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <Label htmlFor="p-price">Prix</Label>
             <Input id="p-price" value={draft.price} onChange={(e) => setDraft({ ...draft, price: e.target.value })} />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <Label htmlFor="p-desc">Description</Label>
             <Textarea id="p-desc" rows={3} value={draft.description} onChange={(e) => setDraft({ ...draft, description: e.target.value })} />
           </div>
           <MediaField label="Photo" folder="products" value={draft.image_url} onChange={(path) => setDraft({ ...draft, image_url: path })} />
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <Label htmlFor="p-order">Ordre d’affichage</Label>
             <Input id="p-order" type="number" value={draft.sort_order} onChange={(e) => setDraft({ ...draft, sort_order: Number(e.target.value) })} />
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 rounded-xl border border-border/70 bg-muted/20 p-3">
             <Switch id="p-visible" checked={draft.is_visible} onCheckedChange={(checked) => setDraft({ ...draft, is_visible: checked })} />
             <Label htmlFor="p-visible">Visible sur le site</Label>
           </div>
@@ -261,14 +261,14 @@ function PhotosPanel() {
 
   return (
     <div>
-      <Button className="mb-5" onClick={() => setDraft({ image_url: "", alt_text: "", sort_order: (data.at(-1)?.sort_order ?? 0) + 10, is_visible: true })}>
+      <Button className="mb-5 rounded-xl shadow-sm" onClick={() => setDraft({ image_url: "", alt_text: "", sort_order: (data.at(-1)?.sort_order ?? 0) + 10, is_visible: true })}>
         <Plus /> Ajouter une photo
       </Button>
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {data.map((photo) => (
-          <div key={photo.id} className="overflow-hidden rounded-sm border border-border">
-            <MediaImage path={photo.image_url} alt={photo.alt_text} className="h-40 w-full object-cover" />
-            <div className="flex items-center justify-between gap-2 p-3">
+          <div key={photo.id} className="overflow-hidden rounded-2xl border border-border/70 bg-background shadow-sm transition-shadow hover:shadow-md">
+            <MediaImage path={photo.image_url} alt={photo.alt_text} className="h-44 w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
+            <div className="flex items-center justify-between gap-2 border-t border-border/60 p-4">
               <p className="min-w-0 flex-1 truncate text-sm">{photo.alt_text}{!photo.is_visible && " · masquée"}</p>
               <RowActions onEdit={() => setDraft(photo)} onDelete={() => remove(photo)} />
             </div>
@@ -280,15 +280,15 @@ function PhotosPanel() {
       {draft && (
         <EditorDialog open onOpenChange={(open) => !open && setDraft(null)} title={draft.id ? "Modifier la photo" : "Nouvelle photo"} onSubmit={save}>
           <MediaField label="Photo" folder="gallery" value={draft.image_url || null} onChange={(path) => setDraft({ ...draft, image_url: path ?? "" })} />
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <Label htmlFor="g-alt">Légende / description</Label>
             <Input id="g-alt" value={draft.alt_text} onChange={(e) => setDraft({ ...draft, alt_text: e.target.value })} />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <Label htmlFor="g-order">Ordre d’affichage</Label>
             <Input id="g-order" type="number" value={draft.sort_order} onChange={(e) => setDraft({ ...draft, sort_order: Number(e.target.value) })} />
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 rounded-xl border border-border/70 bg-muted/20 p-3">
             <Switch id="g-visible" checked={draft.is_visible} onCheckedChange={(checked) => setDraft({ ...draft, is_visible: checked })} />
             <Label htmlFor="g-visible">Visible sur le site</Label>
           </div>
@@ -329,14 +329,14 @@ function VideosPanel() {
 
   return (
     <div>
-      <Button className="mb-5" onClick={() => setDraft({ title: "", description: "", video_url: "", thumbnail_url: null, sort_order: (data.at(-1)?.sort_order ?? 0) + 10, is_visible: true })}>
+      <Button className="mb-5 rounded-xl shadow-sm" onClick={() => setDraft({ title: "", description: "", video_url: "", thumbnail_url: null, sort_order: (data.at(-1)?.sort_order ?? 0) + 10, is_visible: true })}>
         <Plus /> Ajouter une vidéo
       </Button>
-      <div className="divide-y divide-border rounded-sm border border-border">
+      <div className="overflow-hidden rounded-2xl border border-border/70 bg-background shadow-sm">
         {data.map((video) => (
-          <div key={video.id} className="flex items-center gap-4 p-4">
+          <div key={video.id} className="group flex items-center gap-4 border-b border-border/60 p-4 transition-colors last:border-0 hover:bg-muted/30 sm:p-5">
             <div className="min-w-0 flex-1">
-              <p className="truncate font-display text-xl font-semibold">{video.title}</p>
+              <p className="truncate font-display text-lg font-semibold sm:text-xl">{video.title}</p>
               <p className="truncate text-sm text-muted-foreground">{video.video_url}{!video.is_visible && " · masquée"}</p>
             </div>
             <RowActions onEdit={() => setDraft(video)} onDelete={() => remove(video)} />
@@ -347,24 +347,24 @@ function VideosPanel() {
 
       {draft && (
         <EditorDialog open onOpenChange={(open) => !open && setDraft(null)} title={draft.id ? "Modifier la vidéo" : "Nouvelle vidéo"} onSubmit={save}>
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <Label htmlFor="v-title">Titre</Label>
             <Input id="v-title" value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <Label htmlFor="v-desc">Description</Label>
             <Textarea id="v-desc" rows={3} value={draft.description} onChange={(e) => setDraft({ ...draft, description: e.target.value })} />
           </div>
           <MediaField label="Fichier vidéo" folder="videos" value={draft.video_url || null} onChange={(path) => setDraft({ ...draft, video_url: path ?? "" })} />
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <Label htmlFor="v-url">…ou lien YouTube / Vimeo</Label>
             <Input id="v-url" placeholder="https://youtu.be/…" value={draft.video_url.startsWith("http") ? draft.video_url : ""} onChange={(e) => setDraft({ ...draft, video_url: e.target.value })} />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <Label htmlFor="v-order">Ordre d’affichage</Label>
             <Input id="v-order" type="number" value={draft.sort_order} onChange={(e) => setDraft({ ...draft, sort_order: Number(e.target.value) })} />
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 rounded-xl border border-border/70 bg-muted/20 p-3">
             <Switch id="v-visible" checked={draft.is_visible} onCheckedChange={(checked) => setDraft({ ...draft, is_visible: checked })} />
             <Label htmlFor="v-visible">Visible sur le site</Label>
           </div>
@@ -403,15 +403,15 @@ function PostsPanel() {
 
   return (
     <div>
-      <Button className="mb-5" onClick={() => setDraft({ title: "", body: "", image_url: null, is_published: true, published_at: new Date().toISOString() })}>
+      <Button className="mb-5 rounded-xl shadow-sm" onClick={() => setDraft({ title: "", body: "", image_url: null, is_published: true, published_at: new Date().toISOString() })}>
         <Plus /> Ajouter une publication
       </Button>
-      <div className="divide-y divide-border rounded-sm border border-border">
+      <div className="overflow-hidden rounded-2xl border border-border/70 bg-background shadow-sm">
         {data.map((post) => (
-          <div key={post.id} className="flex items-center gap-4 p-4">
-            {post.image_url && <MediaImage path={post.image_url} alt={post.title} className="size-16 shrink-0 rounded-sm object-cover" />}
+          <div key={post.id} className="group flex items-center gap-4 border-b border-border/60 p-4 transition-colors last:border-0 hover:bg-muted/30 sm:p-5">
+            {post.image_url && <MediaImage path={post.image_url} alt={post.title} className="size-16 shrink-0 rounded-xl object-cover ring-1 ring-border/70 sm:size-20" />}
             <div className="min-w-0 flex-1">
-              <p className="truncate font-display text-xl font-semibold">{post.title}</p>
+              <p className="truncate font-display text-lg font-semibold sm:text-xl">{post.title}</p>
               <p className="text-sm text-muted-foreground">
                 {new Date(post.published_at).toLocaleDateString("fr-FR")}{!post.is_published && " · brouillon"}
               </p>
@@ -424,20 +424,20 @@ function PostsPanel() {
 
       {draft && (
         <EditorDialog open onOpenChange={(open) => !open && setDraft(null)} title={draft.id ? "Modifier la publication" : "Nouvelle publication"} onSubmit={save}>
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <Label htmlFor="a-title">Titre</Label>
             <Input id="a-title" value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <Label htmlFor="a-body">Texte</Label>
             <Textarea id="a-body" rows={6} value={draft.body} onChange={(e) => setDraft({ ...draft, body: e.target.value })} />
           </div>
           <MediaField label="Image" folder="posts" value={draft.image_url} onChange={(path) => setDraft({ ...draft, image_url: path })} />
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <Label htmlFor="a-date">Date</Label>
             <Input id="a-date" type="date" value={draft.published_at.slice(0, 10)} onChange={(e) => setDraft({ ...draft, published_at: new Date(e.target.value).toISOString() })} />
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 rounded-xl border border-border/70 bg-muted/20 p-3">
             <Switch id="a-pub" checked={draft.is_published} onCheckedChange={(checked) => setDraft({ ...draft, is_published: checked })} />
             <Label htmlFor="a-pub">Publiée sur le site</Label>
           </div>
@@ -480,8 +480,8 @@ function MessagesPanel() {
   if (isLoading) return <div className="flex justify-center py-16"><Loader2 className="size-6 animate-spin" /></div>;
 
   return (
-    <div className="grid gap-6 md:grid-cols-[320px_1fr]">
-      <div className="space-y-2">
+    <div className="grid gap-5 lg:grid-cols-[340px_minmax(0,1fr)]">
+      <div className="space-y-2.5">
         <p className="text-sm text-muted-foreground">{conversations.length} conversation(s)</p>
         {conversations.length === 0 && (
           <p className="rounded-xl border border-border p-4 text-sm text-muted-foreground">
@@ -491,7 +491,7 @@ function MessagesPanel() {
         {conversations.map((conversation) => (
           <div
             key={conversation.id}
-            className={`flex items-start justify-between gap-2 rounded-xl border p-3 ${selected === conversation.id ? "border-primary bg-muted/50" : "border-border"}`}
+            className={`group flex items-start justify-between gap-2 rounded-2xl border p-4 shadow-sm transition-all ${selected === conversation.id ? "border-primary bg-primary/5 shadow-md" : "border-border/70 bg-background hover:bg-muted/30"}`}
           >
             <button type="button" className="flex-1 text-left" onClick={() => openConversation(conversation)}>
               <p className="font-medium">
@@ -512,13 +512,13 @@ function MessagesPanel() {
         ))}
       </div>
 
-      <div className="rounded-xl border border-border p-4">
+      <div className="min-h-[420px] rounded-2xl border border-border/70 bg-background p-5 shadow-sm">
         {!selected ? (
           <p className="text-sm text-muted-foreground">Sélectionnez une conversation pour lire les messages.</p>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {messages.map((message) => (
-              <div key={message.id} className={message.role === "user" ? "text-left" : "text-left opacity-80"}>
+              <div key={message.id} className={`rounded-xl border border-border/60 p-3 ${message.role === "user" ? "bg-muted/30" : "bg-primary/5"}`}>
                 <p className="text-xs font-semibold uppercase tracking-wide text-primary">
                   {message.role === "user" ? "Visiteur" : "Assistant"}
                 </p>
@@ -555,8 +555,8 @@ function AdminPage() {
   if (!isAdmin) {
     return (
       <div className="grid min-h-screen place-items-center bg-muted px-5">
-        <div className="max-w-md rounded-sm border border-border bg-background p-8 text-center">
-          <h1 className="font-display text-3xl font-semibold">Accès réservé</h1>
+        <div className="w-full max-w-md rounded-2xl border border-border/70 bg-background p-8 text-center shadow-xl">
+          <h1 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">Accès réservé</h1>
           <p className="mt-3 text-sm text-muted-foreground">
             Votre compte n’a pas encore les droits d’administration. Si vous êtes la première personne à ouvrir cet espace, activez-les ci-dessous.
           </p>
@@ -581,33 +581,34 @@ function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-muted">
-      <header className="border-b border-border bg-background">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-5">
+    <div className="min-h-screen bg-muted/60">
+      <header className="sticky top-0 z-30 border-b border-border/70 bg-background/95 shadow-sm backdrop-blur">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-4 lg:px-8">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">O’TERROIR</p>
-            <h1 className="font-display text-3xl font-semibold">Tableau de bord</h1>
+            <h1 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">Tableau de bord</h1>
+            <p className="mt-1 text-sm text-muted-foreground">Gérez le contenu de votre site en toute simplicité.</p>
           </div>
-          <div className="flex gap-2">
-            <Button asChild variant="outline"><Link to="/">Voir le site</Link></Button>
-            <Button variant="ghost" onClick={signOut}>Se déconnecter</Button>
+          <div className="flex items-center gap-2">
+            <Button asChild variant="outline" className="rounded-xl bg-background/80"><Link to="/"><Eye className="mr-2 size-4" />Voir le site</Link></Button>
+            <Button variant="ghost" className="rounded-xl" onClick={signOut}>Se déconnecter</Button>
           </div>
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-5 py-10">
+      <main className="mx-auto max-w-7xl px-5 py-7 lg:px-8 lg:py-10">
         <Tabs defaultValue="produits">
-          <TabsList className="mb-8 flex-wrap">
-            <TabsTrigger value="produits">Produits</TabsTrigger>
-            <TabsTrigger value="photos">Photos</TabsTrigger>
-            <TabsTrigger value="videos">Vidéos</TabsTrigger>
-            <TabsTrigger value="posts">Publications</TabsTrigger>
-            <TabsTrigger value="messages">Messages</TabsTrigger>
+          <TabsList className="mb-8 flex h-auto flex-wrap gap-1 rounded-2xl border border-border/70 bg-background p-1.5 shadow-sm">
+            <TabsTrigger value="produits" className="gap-2 rounded-xl px-4 py-2.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"><Package className="size-4" />Produits</TabsTrigger>
+            <TabsTrigger value="photos" className="gap-2 rounded-xl px-4 py-2.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"><ImageIcon className="size-4" />Photos</TabsTrigger>
+            <TabsTrigger value="videos" className="gap-2 rounded-xl px-4 py-2.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"><Video className="size-4" />Vidéos</TabsTrigger>
+            <TabsTrigger value="posts" className="gap-2 rounded-xl px-4 py-2.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"><FileText className="size-4" />Publications</TabsTrigger>
+            <TabsTrigger value="messages" className="gap-2 rounded-xl px-4 py-2.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"><MessageSquare className="size-4" />Messages</TabsTrigger>
           </TabsList>
-          <TabsContent value="produits"><ProductsPanel /></TabsContent>
-          <TabsContent value="photos"><PhotosPanel /></TabsContent>
-          <TabsContent value="videos"><VideosPanel /></TabsContent>
-          <TabsContent value="posts"><PostsPanel /></TabsContent>
-          <TabsContent value="messages"><MessagesPanel /></TabsContent>
+          <TabsContent value="produits" className="mt-0"><ProductsPanel /></TabsContent>
+          <TabsContent value="photos" className="mt-0"><PhotosPanel /></TabsContent>
+          <TabsContent value="videos" className="mt-0"><VideosPanel /></TabsContent>
+          <TabsContent value="posts" className="mt-0"><PostsPanel /></TabsContent>
+          <TabsContent value="messages" className="mt-0"><MessagesPanel /></TabsContent>
         </Tabs>
       </main>
     </div>
