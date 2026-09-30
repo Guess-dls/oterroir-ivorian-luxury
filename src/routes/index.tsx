@@ -34,7 +34,7 @@ import {
 } from "@/lib/content";
 import { type ProductCategory } from "@/data/products";
 import heroImage from "@/assets/oterroir-hero.jpg";
-import riceImage from "@/assets/riz-collection.jpg";
+import riceImage from "@/assets/riz_noir.png";
 import cornImage from "@/assets/mais-violet.jpg";
 import liqueurImage from "@/assets/liqueurs.jpg";
 
