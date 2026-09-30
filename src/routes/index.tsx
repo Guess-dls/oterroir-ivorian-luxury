@@ -25,6 +25,7 @@ import {
   type DbPhoto,
   type DbProduct,
 } from "@/lib/content";
+import { type ProductCategory } from "@/data/products";
 import heroImage from "@/assets/oterroir-hero.jpg";
 import riceImage from "@/assets/riz-collection.jpg";
 import cornImage from "@/assets/mais-violet.jpg";
@@ -261,22 +262,115 @@ function SectionHeading({
   );
 }
 
+function ImageLightbox({
+  src,
+  alt,
+  onClose,
+}: {
+  src: string;
+  alt: string;
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[70] flex items-center justify-center bg-deep/90 p-4 backdrop-blur-2xl"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Agrandissement : ${alt}`}
+      onClick={onClose}
+    >
+      <Button
+        variant="ghost"
+        size="icon"
+        className="absolute right-4 top-4 z-10 rounded-xl border border-primary-foreground/15 bg-primary-foreground/10 text-primary-foreground backdrop-blur-xl hover:bg-primary-foreground/20"
+        onClick={(event) => {
+          event.stopPropagation();
+          onClose();
+        }}
+        aria-label="Fermer l'image"
+      >
+        <X />
+      </Button>
+
+      <div
+        className="max-h-[92vh] max-w-[94vw] rounded-[2rem] border border-primary-foreground/15 bg-primary-foreground/5 p-2 shadow-2xl backdrop-blur-xl"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <img
+          src={src}
+          alt={alt}
+          className="max-h-[88vh] max-w-[90vw] rounded-[1.5rem] object-contain"
+        />
+      </div>
+    </div>
+  );
+}
+
+function ClickableImage({
+  src,
+  alt,
+  className,
+  buttonClassName = "",
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  buttonClassName?: string;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-label={`Agrandir : ${alt}`}
+        className={`group block cursor-zoom-in text-left ${buttonClassName}`}
+      >
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          className={`transition-transform duration-700 group-hover:scale-[1.03] ${className ?? ""}`}
+        />
+      </button>
+
+      {open && (
+        <ImageLightbox
+          src={src}
+          alt={alt}
+          onClose={() => setOpen(false)}
+        />
+      )}
+    </>
+  );
+}
+
 function Hero() {
   return (
     <section
       id="accueil"
       className="relative flex min-h-[100svh] items-end overflow-hidden pt-24"
     >
-      <img
+      <ClickableImage
         src={heroImage}
-        width={1920}
-        height={1104}
-        alt="Produits du terroir ivoirien"
-        className="absolute inset-0 h-full w-full object-cover object-center"
+        alt="Sélection de produits du terroir ivoirien"
+        buttonClassName="absolute inset-0 h-full w-full"
+        className="h-full w-full object-cover object-center"
       />
 
-      <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/15" />
-      <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/15" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
 
       <div className="relative mx-auto w-full max-w-7xl px-5 pb-12 pt-32 lg:px-8 lg:pb-20">
         <div className="max-w-3xl rounded-[2rem] border border-white/20 bg-background/40 p-6 shadow-2xl shadow-deep/10 backdrop-blur-xl sm:p-8 lg:p-10">
@@ -289,8 +383,9 @@ function Hero() {
           </h1>
 
           <p className="mt-6 max-w-xl text-base leading-7 text-foreground/75 md:text-lg">
-            Découvrez une sélection de produits locaux et artisanaux de Côte
-            d’Ivoire, choisis avec soin pour leur authenticité et leur qualité.
+            O’TERROIR by Stéphanie vous fait découvrir une sélection de
+            produits locaux et artisanaux, choisis pour leur authenticité et
+            leur qualité.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -346,7 +441,7 @@ function TrustBar() {
   return (
     <section
       aria-label="Nos engagements"
-      className="relative z-10 bg-primary"
+      className="relative z-10 bg-primary text-primary-foreground"
     >
       <div className="mx-auto grid max-w-7xl grid-cols-2 gap-2 px-5 py-4 md:grid-cols-4 lg:px-8">
         {items.map((item, index) => (
@@ -390,13 +485,14 @@ function Universe() {
           </p>
 
           <h2 className="font-display text-3xl font-semibold leading-tight md:text-5xl">
-            Les richesses du terroir ivoirien, autrement présentées.
+            Des richesses locales présentées avec exigence.
           </h2>
 
           <p className="mt-6 max-w-2xl text-base leading-8 text-muted-foreground">
-            O’TERROIR by Stéphanie met en lumière des produits locaux et
-            artisanaux sélectionnés avec soin. Chaque produit raconte une
-            histoire, un savoir-faire et une origine.
+            Nous mettons en lumière des ingrédients profondément ancrés en
+            Côte d’Ivoire. Chaque produit est choisi pour son identité, puis
+            présenté dans un esprit contemporain qui respecte son origine et
+            celles et ceux qui le font vivre.
           </p>
         </div>
       </div>
@@ -405,16 +501,28 @@ function Universe() {
 }
 
 function ProductCard({ product }: { product: DbProduct }) {
+  const fallback = product.asset_key
+    ? assetMap[product.asset_key]
+    : undefined;
+
+  const image = product.image_url ?? fallback;
+
   return (
     <article className="group overflow-hidden rounded-[1.5rem] border border-border/70 bg-card/65 shadow-lg shadow-deep/5 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-deep/10 reveal">
       <div className="relative h-60 overflow-hidden">
         <MediaImage
           path={product.image_url}
-          fallback={assetMap[product.asset_key ?? "hero"]}
+          fallback={fallback}
           objectPosition={product.image_position}
           alt={product.name}
           className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.06]"
         />
+
+        {image && (
+          <div className="pointer-events-none absolute right-3 top-3 rounded-full border border-white/20 bg-deep/40 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-primary-foreground backdrop-blur-md">
+            Voir
+          </div>
+        )}
 
         <div className="absolute inset-x-3 bottom-3 rounded-xl border border-white/20 bg-deep/35 px-3 py-2 backdrop-blur-md">
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-foreground">
@@ -471,7 +579,7 @@ function Catalogue() {
     [products],
   );
 
-  const filteredProducts =
+  const visible =
     filter === "TOUS"
       ? products
       : products.filter((product) => product.category === filter);
@@ -485,7 +593,7 @@ function Catalogue() {
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <SectionHeading
             eyebrow="La sélection"
-            title="Nos produits"
+            title="Les essentiels O’TERROIR"
           />
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -495,28 +603,6 @@ function Catalogue() {
                 className="h-[430px] animate-pulse rounded-[1.5rem] border border-border/60 bg-card/50 backdrop-blur-xl"
               />
             ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  if (products.length === 0) {
-    return (
-      <section
-        id="produits"
-        className="relative overflow-hidden bg-muted py-24 md:py-32"
-      >
-        <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <SectionHeading
-            eyebrow="La sélection"
-            title="Nos produits"
-          />
-
-          <div className="rounded-[2rem] border border-border/60 bg-card/50 p-8 text-center shadow-xl backdrop-blur-xl">
-            <p className="text-muted-foreground">
-              Notre sélection de produits sera bientôt disponible.
-            </p>
           </div>
         </div>
       </section>
@@ -533,7 +619,7 @@ function Catalogue() {
       <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
         <SectionHeading
           eyebrow="La sélection"
-          title="Nos produits"
+          title="Les essentiels O’TERROIR"
         />
 
         {categories.length > 0 && (
@@ -542,161 +628,380 @@ function Catalogue() {
             role="group"
             aria-label="Filtrer les produits"
           >
-            {["TOUS", ...categories].map((category) => (
+            {["TOUS", ...categories].map((item) => (
               <Button
-                key={category}
-                variant={filter === category ? "default" : "outline"}
+                key={item}
+                variant={filter === item ? "default" : "outline"}
                 size="sm"
-                onClick={() => setFilter(category)}
+                onClick={() => setFilter(item)}
                 className={
-                  filter === category
+                  filter === item
                     ? "shrink-0 rounded-full px-4 shadow-lg shadow-primary/15"
                     : "shrink-0 rounded-full border-border/70 bg-background/45 px-4 backdrop-blur-xl"
                 }
               >
-                {category}
+                {item}
               </Button>
             ))}
           </div>
         )}
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        {visible.length === 0 ? (
+          <div className="rounded-[2rem] border border-border/60 bg-card/50 p-10 text-center shadow-xl backdrop-blur-xl">
+            <p className="text-muted-foreground">
+              Aucun produit disponible dans cette catégorie.
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {visible.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function RiceCollection() {
+  const rices = useProducts().products.filter(
+    (product) => product.category === "RIZ LOCAL",
+  );
+
+  if (rices.length === 0) return null;
+
+  return (
+    <section className="relative overflow-hidden bg-background py-24 md:py-32">
+      <div className="pointer-events-none absolute left-0 top-1/3 size-96 rounded-full bg-gold/10 blur-3xl" />
+
+      <div className="relative mx-auto grid max-w-7xl items-start gap-10 px-5 lg:grid-cols-2 lg:px-8">
+        <div className="sticky top-28 overflow-hidden rounded-[2rem] border border-border/60 bg-card/50 p-2 shadow-2xl backdrop-blur-xl">
+          <ClickableImage
+            src={riceImage}
+            alt="Collection de riz locaux ivoiriens"
+            className="w-full rounded-[1.5rem] object-cover"
+          />
+        </div>
+
+        <div className="rounded-[2rem] border border-border/60 bg-card/40 p-6 shadow-xl backdrop-blur-xl md:p-8">
+          <SectionHeading
+            eyebrow="Collection Riz Local"
+            title="Des grains, autant d’expressions du terroir."
+          />
+
+          <div className="divide-y divide-border/60 overflow-hidden rounded-2xl border border-border/60 bg-background/35">
+            {rices.map((rice, index) => (
+              <a
+                key={rice.id}
+                href={orderUrl(rice.name)}
+                target="_blank"
+                rel="noreferrer"
+                className="group grid grid-cols-[2rem_1fr_auto] items-center gap-3 px-4 py-5 transition-colors hover:bg-primary/5"
+              >
+                <span className="text-xs text-muted-foreground">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+
+                <span className="font-display text-2xl font-semibold group-hover:text-primary">
+                  {rice.name}
+                </span>
+
+                <span className="text-right text-sm font-semibold text-earth">
+                  {rice.price}
+                </span>
+              </a>
+            ))}
+          </div>
+
+          <p className="mt-6 text-sm text-muted-foreground">
+            Autres formats et disponibilités : nous contacter.
+          </p>
+
+          <Button asChild className="mt-6 h-12 shadow-lg shadow-primary/15">
+            <a
+              href={whatsappUrl(
+                "Bonjour O’TERROIR by Stéphanie 👋 Je souhaite connaître les formats et disponibilités de votre collection de riz local.",
+              )}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Choisir mon riz sur WhatsApp
+              <ArrowRight />
+            </a>
+          </Button>
         </div>
       </div>
     </section>
   );
 }
 
-function FeaturedCategory({
-  category,
-  title,
-  description,
-  image,
-  dark = false,
-}: {
-  category: string;
-  title: string;
-  description: string;
-  image: string;
-  dark?: boolean;
-}) {
-  const { products } = useProducts();
-
-  const items = products.filter((product) => product.category === category);
-
-  if (items.length === 0) return null;
+function PurpleCorn() {
+  const [open, setOpen] = useState(false);
 
   return (
-    <section
-      className={`relative overflow-hidden py-24 md:py-32 ${
-        dark ? "bg-deep text-primary-foreground" : "bg-background"
-      }`}
-    >
-      <div className="pointer-events-none absolute -right-32 top-1/3 size-96 rounded-full bg-primary/10 blur-3xl" />
+    <section className="relative overflow-hidden bg-violet py-20 text-accent-foreground md:py-28">
+      <div className="pointer-events-none absolute -right-24 top-1/4 size-96 rounded-full bg-gold/10 blur-3xl" />
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-5 lg:grid-cols-2 lg:px-8">
-        <div
-          className={`overflow-hidden rounded-[2rem] border p-2 shadow-2xl backdrop-blur-xl ${
-            dark
-              ? "border-primary-foreground/15 bg-primary-foreground/5"
-              : "border-border/60 bg-card/40"
-          }`}
-        >
-          <img
-            src={image}
-            loading="lazy"
-            alt={title}
-            className="aspect-[4/3] w-full rounded-[1.5rem] object-cover"
-          />
-        </div>
-
-        <div
-          className={`rounded-[2rem] border p-7 shadow-xl backdrop-blur-xl md:p-10 ${
-            dark
-              ? "border-primary-foreground/15 bg-primary-foreground/5"
-              : "border-border/60 bg-card/45"
-          }`}
-        >
-          <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary">
-            {category}
+        <div className="reveal rounded-[2rem] border border-accent-foreground/15 bg-accent-foreground/5 p-7 shadow-2xl backdrop-blur-xl md:p-10">
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-gold">
+            Un ingrédient singulier
           </p>
 
-          <h2
-            className={`mt-4 font-display text-4xl font-semibold md:text-6xl ${
-              dark ? "text-primary-foreground" : "text-foreground"
-            }`}
-          >
-            {title}
+          <h2 className="mt-4 font-display text-5xl font-semibold md:text-7xl">
+            Maïs Violet
           </h2>
 
-          <p
-            className={`mt-6 text-base leading-8 ${
-              dark
-                ? "text-primary-foreground/70"
-                : "text-muted-foreground"
-            }`}
-          >
-            {description}
+          <p className="mt-6 max-w-xl text-base leading-8 text-accent-foreground/75">
+            Une poudre de maïs violet locale, intense par sa couleur et
+            inspirante en cuisine. Une autre manière de découvrir un ingrédient
+            authentique du terroir ivoirien.
           </p>
 
-          <div
-            className={`mt-7 divide-y overflow-hidden rounded-2xl border ${
-              dark
-                ? "divide-primary-foreground/10 border-primary-foreground/10 bg-primary-foreground/5"
-                : "divide-border/60 border-border/60 bg-background/35"
-            }`}
-          >
-            {items.map((product) => (
-              <a
-                key={product.id}
-                href={orderUrl(product.name)}
-                target="_blank"
-                rel="noreferrer"
-                className={`flex items-center justify-between gap-4 px-4 py-4 transition-colors ${
-                  dark
-                    ? "hover:bg-primary-foreground/5 hover:text-gold"
-                    : "hover:bg-primary/5 hover:text-primary"
-                }`}
+          <div className="mt-7 flex flex-wrap gap-2">
+            {["Local", "Authentique", "Culinaire"].map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full border border-accent-foreground/20 bg-accent-foreground/5 px-4 py-2 text-xs uppercase tracking-[0.14em] backdrop-blur-md"
               >
-                <span className="font-display text-xl">
-                  {product.name}
-                </span>
-
-                <span
-                  className={`shrink-0 text-xs font-semibold ${
-                    dark ? "text-gold" : "text-earth"
-                  }`}
-                >
-                  {product.price}
-                </span>
-              </a>
+                {tag}
+              </span>
             ))}
           </div>
 
           <Button
             asChild
-            className={`mt-7 ${
-              dark
-                ? "bg-gold text-deep hover:bg-gold/90"
-                : ""
-            }`}
+            className="mt-8 bg-gold text-deep shadow-xl shadow-deep/20 hover:bg-gold/90"
           >
             <a
-              href={whatsappUrl(
-                `Bonjour O’TERROIR by Stéphanie 👋 Je souhaite découvrir votre sélection ${category}.`,
-              )}
+              href={orderUrl("Poudre de maïs violet")}
               target="_blank"
               rel="noreferrer"
             >
-              Découvrir la sélection
-              <ArrowRight />
+              Découvrir sur WhatsApp
+            </a>
+          </Button>
+        </div>
+
+        <div className="rounded-[2rem] border border-accent-foreground/15 bg-accent-foreground/5 p-2 shadow-2xl backdrop-blur-xl">
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="group relative block w-full cursor-zoom-in overflow-hidden rounded-[1.5rem]"
+            aria-label="Agrandir l'image du Maïs Violet"
+          >
+            <img
+              src={cornImage}
+              loading="lazy"
+              width={1200}
+              height={1408}
+              alt="Poudre et épis de maïs violet"
+              className="aspect-[4/5] max-h-[650px] w-full rounded-[1.5rem] object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+            />
+
+            <span className="absolute bottom-4 right-4 rounded-full border border-white/20 bg-deep/45 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur-md">
+              Agrandir
+            </span>
+          </button>
+        </div>
+      </div>
+
+      {open && (
+        <ImageLightbox
+          src={cornImage}
+          alt="Poudre et épis de maïs violet"
+          onClose={() => setOpen(false)}
+        />
+      )}
+    </section>
+  );
+}
+
+function GorillaCola() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <section className="relative overflow-hidden bg-background py-24">
+      <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 lg:grid-cols-[1.15fr_0.85fr] lg:px-8">
+        <div className="relative min-h-[430px] overflow-hidden rounded-[2rem] border border-border/60 bg-card/40 p-2 shadow-2xl backdrop-blur-xl">
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="group absolute inset-2 cursor-zoom-in overflow-hidden rounded-[1.5rem]"
+            aria-label="Agrandir l'image du Cola de gorille"
+          >
+            <img
+              src={heroImage}
+              loading="lazy"
+              width={1920}
+              height={1104}
+              alt="Cola de gorille parmi des produits du terroir"
+              className="absolute inset-0 h-full w-full rounded-[1.5rem] object-cover object-right transition-transform duration-700 group-hover:scale-[1.03]"
+            />
+
+            <span className="absolute bottom-4 right-4 rounded-full border border-white/20 bg-deep/45 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur-md">
+              Agrandir
+            </span>
+          </button>
+        </div>
+
+        <div className="reveal rounded-[2rem] border border-border/60 bg-card/45 p-7 shadow-xl backdrop-blur-xl md:p-9">
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary">
+            Découverte traditionnelle
+          </p>
+
+          <h2 className="mt-3 font-display text-5xl font-semibold md:text-6xl">
+            Cola de gorille
+          </h2>
+
+          <p className="mt-6 text-base leading-8 text-muted-foreground">
+            Un produit emblématique qui raconte la diversité des ressources
+            locales. Nous le proposons comme une découverte authentique du
+            terroir, avec simplicité et respect de la tradition.
+          </p>
+
+          <Button
+            asChild
+            variant="outline"
+            className="mt-7 h-12 border-primary/40 bg-background/30 text-primary backdrop-blur-xl hover:bg-primary/10"
+          >
+            <a
+              href={orderUrl("Cola de gorille")}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Demander les disponibilités
             </a>
           </Button>
         </div>
       </div>
+
+      {open && (
+        <ImageLightbox
+          src={heroImage}
+          alt="Cola de gorille parmi des produits du terroir"
+          onClose={() => setOpen(false)}
+        />
+      )}
+    </section>
+  );
+}
+
+function Liqueurs() {
+  const products = useProducts().products;
+
+  const items = products
+    .filter((product) => product.category === "LIQUEURS")
+    .map(
+      (product) =>
+        [
+          product.name.replace(/^Liqueur (de |d’)?/i, ""),
+          product.price,
+        ] as const,
+    );
+
+  const [open, setOpen] = useState(false);
+
+  return (
+    <section className="relative overflow-hidden bg-deep py-24 text-primary-foreground md:py-32">
+      <div className="pointer-events-none absolute left-0 top-1/3 size-96 rounded-full bg-gold/10 blur-3xl" />
+
+      <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
+        <SectionHeading
+          eyebrow="Créations artisanales"
+          title="Liqueurs du terroir"
+          light
+        />
+
+        <div className="grid items-stretch gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="rounded-[2rem] border border-primary-foreground/15 bg-primary-foreground/5 p-2 shadow-2xl backdrop-blur-xl">
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              className="group relative block h-full w-full cursor-zoom-in overflow-hidden rounded-[1.5rem]"
+              aria-label="Agrandir l'image des liqueurs"
+            >
+              <img
+                src={liqueurImage}
+                loading="lazy"
+                width={1408}
+                height={1104}
+                alt="Sélection de liqueurs artisanales"
+                className="h-full min-h-[480px] w-full rounded-[1.5rem] object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+              />
+
+              <span className="absolute bottom-4 right-4 rounded-full border border-white/20 bg-deep/50 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur-md">
+                Agrandir
+              </span>
+            </button>
+          </div>
+
+          <div className="rounded-[2rem] border border-primary-foreground/15 bg-primary-foreground/5 p-7 shadow-2xl backdrop-blur-xl md:p-9">
+            <p className="mb-7 leading-7 text-primary-foreground/65">
+              Des recettes artisanales qui révèlent les saveurs locales dans
+              un registre généreux et élégant.
+            </p>
+
+            {items.length > 0 ? (
+              <div className="divide-y divide-primary-foreground/10 overflow-hidden rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5">
+                {items.map(([name, price]) => (
+                  <a
+                    key={name}
+                    href={orderUrl(`Liqueur ${name}`)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center justify-between gap-4 px-4 py-4 transition-colors hover:bg-primary-foreground/5 hover:text-gold"
+                  >
+                    <span className="font-display text-xl">{name}</span>
+
+                    <span className="text-xs font-semibold uppercase tracking-wider">
+                      {price}
+                    </span>
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5 p-5 text-sm text-primary-foreground/60">
+                Découvrez nos créations artisanales et contactez-nous pour
+                connaître les disponibilités.
+              </div>
+            )}
+
+            <p className="mt-5 text-sm text-primary-foreground/60">
+              Autres créations disponibles sur demande.
+            </p>
+
+            <Button
+              asChild
+              className="mt-7 bg-gold text-deep shadow-xl shadow-deep/30 hover:bg-gold/90"
+            >
+              <a
+                href={whatsappUrl(
+                  "Bonjour O’TERROIR by Stéphanie 👋 Je souhaite découvrir vos liqueurs artisanales.",
+                )}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Découvrir la collection
+              </a>
+            </Button>
+          </div>
+        </div>
+
+        <p className="mt-7 rounded-xl border border-gold/20 bg-primary-foreground/5 px-4 py-3 text-xs leading-6 text-primary-foreground/65 backdrop-blur-md">
+          La vente d’alcool est interdite aux mineurs. L’abus d’alcool est
+          dangereux pour la santé. À consommer avec modération.
+        </p>
+      </div>
+
+      {open && (
+        <ImageLightbox
+          src={liqueurImage}
+          alt="Sélection de liqueurs artisanales"
+          onClose={() => setOpen(false)}
+        />
+      )}
     </section>
   );
 }
@@ -810,7 +1115,9 @@ function Gallery() {
       if (event.key === "Escape") setActive(null);
 
       if (event.key === "ArrowRight") {
-        setActive((current) => (current === null ? 0 : (current + 1) % total));
+        setActive((current) =>
+          current === null ? 0 : (current + 1) % total,
+        );
       }
 
       if (event.key === "ArrowLeft") {
@@ -934,18 +1241,26 @@ function VideoPlayer({
   title: string;
 }) {
   const url = useMediaUrl(path);
-  const isYoutube = /youtu\.be|youtube\.com/i.test(path);
-  const isVimeo = /vimeo\.com/i.test(path);
 
-  if (isYoutube) {
+  if (/youtube\.com|youtu\.be/i.test(path)) {
     let src = path;
 
-    if (path.includes("youtu.be/")) {
-      const id = path.split("youtu.be/")[1]?.split(/[?&]/)[0];
-      src = id ? `https://www.youtube.com/embed/${id}` : path;
-    } else if (path.includes("watch?v=")) {
-      const id = new URL(path).searchParams.get("v");
-      src = id ? `https://www.youtube.com/embed/${id}` : path;
+    try {
+      if (path.includes("youtu.be/")) {
+        const id = path.split("youtu.be/")[1]?.split(/[?&]/)[0];
+
+        if (id) {
+          src = `https://www.youtube.com/embed/${id}`;
+        }
+      } else if (path.includes("watch?v=")) {
+        const id = new URL(path).searchParams.get("v");
+
+        if (id) {
+          src = `https://www.youtube.com/embed/${id}`;
+        }
+      }
+    } catch {
+      src = path;
     }
 
     return (
@@ -961,7 +1276,7 @@ function VideoPlayer({
     );
   }
 
-  if (isVimeo) {
+  if (/vimeo\.com/i.test(path)) {
     const match = path.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
     const src = match
       ? `https://player.vimeo.com/video/${match[1]}`
@@ -1167,6 +1482,7 @@ function Contact() {
               <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-muted text-primary">
                 <Phone className="size-4" />
               </span>
+
               +225 07 49 93 92 67
             </a>
 
@@ -1177,6 +1493,7 @@ function Contact() {
               <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-muted text-primary">
                 <Mail className="size-4" />
               </span>
+
               {EMAIL}
             </a>
           </div>
@@ -1188,6 +1505,7 @@ function Contact() {
         >
           <label className="text-xs font-bold uppercase tracking-wider">
             Nom
+
             <input
               name="name"
               maxLength={80}
@@ -1198,6 +1516,7 @@ function Contact() {
 
           <label className="text-xs font-bold uppercase tracking-wider">
             Email
+
             <input
               name="email"
               type="email"
@@ -1209,6 +1528,7 @@ function Contact() {
 
           <label className="text-xs font-bold uppercase tracking-wider md:col-span-2">
             Objet
+
             <input
               name="subject"
               maxLength={100}
@@ -1219,6 +1539,7 @@ function Contact() {
 
           <label className="text-xs font-bold uppercase tracking-wider md:col-span-2">
             Message
+
             <textarea
               name="message"
               maxLength={800}
@@ -1325,29 +1646,10 @@ function HomePage() {
         <TrustBar />
         <Universe />
         <Catalogue />
-
-        <FeaturedCategory
-          category="RIZ LOCAL"
-          title="La collection Riz Local"
-          description="Une sélection de riz locaux présentés selon les disponibilités réelles de notre catalogue."
-          image={riceImage}
-        />
-
-        <FeaturedCategory
-          category="MAÏS"
-          title="Maïs"
-          description="Découvrez notre sélection autour du maïs et des produits qui en sont issus."
-          image={cornImage}
-        />
-
-        <FeaturedCategory
-          category="LIQUEURS"
-          title="Liqueurs"
-          description="Découvrez les créations artisanales disponibles dans notre catalogue."
-          image={liqueurImage}
-          dark
-        />
-
+        <RiceCollection />
+        <PurpleCorn />
+        <GorillaCola />
+        <Liqueurs />
         <HomeMarket />
         <KnowHow />
         <Gallery />
