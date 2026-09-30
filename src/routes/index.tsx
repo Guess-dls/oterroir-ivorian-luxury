@@ -1,5 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+  type FormEvent,
+  type ReactNode,
+} from "react";
 import { createPortal } from "react-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -8,6 +14,7 @@ import {
   ChevronRight,
   Mail,
   Menu,
+  MessageCircle,
   Phone,
   ShoppingBag,
   X,
@@ -49,6 +56,30 @@ const orderUrl = (name: string) =>
   whatsappUrl(
     `Bonjour O’TERROIR by Stéphanie 👋 Je souhaite commander : ${name}. Pouvez-vous me renseigner sur sa disponibilité ?`,
   );
+
+function openInternalChat() {
+  window.dispatchEvent(new Event("oterroir:open-chat"));
+}
+
+function InternalChatButton({
+  children = "Chat interne",
+  className = "",
+}: {
+  children?: ReactNode;
+  className?: string;
+}) {
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      onClick={openInternalChat}
+      className={`border-primary/30 bg-background/40 text-primary backdrop-blur-xl hover:bg-primary/10 ${className}`}
+    >
+      <MessageCircle className="size-4" />
+      {children}
+    </Button>
+  );
+}
 
 const contactSchema = z.object({
   name: z.string().trim().min(2, "Indiquez votre nom.").max(80),
@@ -182,6 +213,8 @@ function Header() {
                 <span>WhatsApp</span>
               </a>
             </Button>
+
+            <InternalChatButton className="h-10 rounded-full px-4" />
           </div>
 
           {/* Actions tablette */}
@@ -208,6 +241,8 @@ function Header() {
                 WhatsApp
               </a>
             </Button>
+
+            <InternalChatButton className="h-9 rounded-full px-3 text-xs" />
           </div>
 
           {/* Menu mobile */}
@@ -257,19 +292,23 @@ function Header() {
                 +225 07 49 93 92 67
               </a>
 
-              <Button
-                asChild
-                className="h-11 w-full rounded-xl bg-primary/90"
-              >
-                <a
-                  href={whatsappUrl()}
-                  target="_blank"
-                  rel="noreferrer"
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  asChild
+                  className="h-11 w-full rounded-xl bg-primary/90"
                 >
-                  <ShoppingBag />
-                  WhatsApp
-                </a>
-              </Button>
+                  <a
+                    href={whatsappUrl()}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <ShoppingBag />
+                    WhatsApp
+                  </a>
+                </Button>
+
+                <InternalChatButton className="h-11 rounded-xl" />
+              </div>
             </div>
           </div>
         )}
@@ -448,16 +487,20 @@ function Hero() {
               </a>
             </Button>
 
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="h-12 border-primary/40 bg-background/30 px-6 text-primary shadow-lg backdrop-blur-xl hover:bg-primary/10"
-            >
-              <a href={whatsappUrl()} target="_blank" rel="noreferrer">
-                Commander sur WhatsApp
-              </a>
-            </Button>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="h-12 border-primary/40 bg-background/30 px-6 text-primary shadow-lg backdrop-blur-xl hover:bg-primary/10"
+              >
+                <a href={whatsappUrl()} target="_blank" rel="noreferrer">
+                  Commander sur WhatsApp
+                </a>
+              </Button>
+
+              <InternalChatButton className="h-12 px-6" />
+            </div>
           </div>
 
           <div className="mt-8 flex flex-wrap gap-2">
@@ -591,20 +634,24 @@ function ProductCard({ product }: { product: DbProduct }) {
         <div className="mt-6 flex items-center justify-between gap-3">
           <strong className="text-sm text-earth">{product.price}</strong>
 
-          <Button
-            asChild
-            size="sm"
-            variant="outline"
-            className="border-primary/40 bg-background/30 text-primary backdrop-blur-xl hover:bg-primary/10"
-          >
-            <a
-              href={orderUrl(product.name)}
-              target="_blank"
-              rel="noreferrer"
+          <div className="flex items-center gap-2">
+            <Button
+              asChild
+              size="sm"
+              variant="outline"
+              className="border-primary/40 bg-background/30 text-primary backdrop-blur-xl hover:bg-primary/10"
             >
-              Commander
-            </a>
-          </Button>
+              <a
+                href={orderUrl(product.name)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Commander
+              </a>
+            </Button>
+
+            <InternalChatButton className="h-9 px-3 text-xs" />
+          </div>
         </div>
       </div>
     </article>
@@ -766,18 +813,22 @@ function RiceCollection() {
             Autres formats et disponibilités : nous contacter.
           </p>
 
-          <Button asChild className="mt-6 h-12 shadow-lg shadow-primary/15">
-            <a
-              href={whatsappUrl(
-                "Bonjour O’TERROIR by Stéphanie 👋 Je souhaite connaître les formats et disponibilités de votre collection de riz local.",
-              )}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Choisir mon riz sur WhatsApp
-              <ArrowRight />
-            </a>
-          </Button>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <Button asChild className="h-12 shadow-lg shadow-primary/15">
+              <a
+                href={whatsappUrl(
+                  "Bonjour O’TERROIR by Stéphanie 👋 Je souhaite connaître les formats et disponibilités de votre collection de riz local.",
+                )}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Choisir mon riz sur WhatsApp
+                <ArrowRight />
+              </a>
+            </Button>
+
+            <InternalChatButton className="h-12 px-5" />
+          </div>
         </div>
       </div>
     </section>
@@ -818,18 +869,22 @@ function PurpleCorn() {
             ))}
           </div>
 
-          <Button
-            asChild
-            className="mt-8 bg-gold text-deep shadow-xl shadow-deep/20 hover:bg-gold/90"
-          >
-            <a
-              href={orderUrl("Poudre de maïs violet")}
-              target="_blank"
-              rel="noreferrer"
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Button
+              asChild
+              className="bg-gold text-deep shadow-xl shadow-deep/20 hover:bg-gold/90"
             >
-              Découvrir sur WhatsApp
-            </a>
-          </Button>
+              <a
+                href={orderUrl("Poudre de maïs violet")}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Découvrir sur WhatsApp
+              </a>
+            </Button>
+
+            <InternalChatButton className="border-accent-foreground/30 bg-accent-foreground/10 text-accent-foreground hover:bg-accent-foreground/15" />
+          </div>
         </div>
 
         <div className="rounded-[2rem] border border-accent-foreground/15 bg-accent-foreground/5 p-2 shadow-2xl backdrop-blur-xl">
@@ -911,19 +966,23 @@ function GorillaCola() {
             terroir, avec simplicité et respect de la tradition.
           </p>
 
-          <Button
-            asChild
-            variant="outline"
-            className="mt-7 h-12 border-primary/40 bg-background/30 text-primary backdrop-blur-xl hover:bg-primary/10"
-          >
-            <a
-              href={orderUrl("Cola de gorille")}
-              target="_blank"
-              rel="noreferrer"
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <Button
+              asChild
+              variant="outline"
+              className="h-12 border-primary/40 bg-background/30 text-primary backdrop-blur-xl hover:bg-primary/10"
             >
-              Demander les disponibilités
-            </a>
-          </Button>
+              <a
+                href={orderUrl("Cola de gorille")}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Demander les disponibilités
+              </a>
+            </Button>
+
+            <InternalChatButton className="h-12 px-5" />
+          </div>
         </div>
       </div>
 
@@ -1090,6 +1149,8 @@ function HomeMarket() {
               Écrire sur WhatsApp
             </a>
           </Button>
+
+          <InternalChatButton className="h-12 border-deep/30 bg-background/10 text-deep hover:bg-deep/10" />
 
           <Button
             asChild
@@ -1669,13 +1730,17 @@ function Contact() {
             </p>
           )}
 
-          <Button
-            type="submit"
-            className="h-12 shadow-lg shadow-primary/15 md:col-span-2"
-          >
-            Envoyer sur WhatsApp
-            <ArrowRight />
-          </Button>
+          <div className="flex flex-col gap-3 md:col-span-2 sm:flex-row">
+            <Button
+              type="submit"
+              className="h-12 flex-1 shadow-lg shadow-primary/15"
+            >
+              Envoyer sur WhatsApp
+              <ArrowRight />
+            </Button>
+
+            <InternalChatButton className="h-12 px-6" />
+          </div>
         </form>
       </div>
     </section>
@@ -1770,6 +1835,8 @@ function HomePage() {
       </main>
 
       <Footer />
+
+      <ChatWidget />
     </div>
   );
 }
