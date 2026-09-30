@@ -1406,6 +1406,52 @@ function Videos() {
   );
 }
 
+function PostImage({
+  path,
+  alt,
+}: {
+  path: string;
+  alt: string;
+}) {
+  const resolved = useMediaUrl(path);
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => {
+          if (resolved) {
+            setOpen(true);
+          }
+        }}
+        aria-label={`Agrandir : ${alt}`}
+        className="group relative block w-full cursor-zoom-in overflow-hidden rounded-xl text-left"
+      >
+        <MediaImage
+          path={path}
+          alt={alt}
+          className="h-52 w-full rounded-xl object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+        />
+
+        {resolved && (
+          <span className="pointer-events-none absolute bottom-3 right-3 rounded-full border border-white/20 bg-deep/50 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-primary-foreground opacity-0 backdrop-blur-md transition-opacity duration-300 group-hover:opacity-100">
+            Agrandir
+          </span>
+        )}
+      </button>
+
+      {open && resolved && (
+        <ImageLightbox
+          src={resolved}
+          alt={alt}
+          onClose={() => setOpen(false)}
+        />
+      )}
+    </>
+  );
+}
+
 function Posts() {
   const { data } = useQuery(postsQuery());
 
