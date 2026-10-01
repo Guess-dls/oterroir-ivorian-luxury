@@ -45,8 +45,13 @@ export const productsQuery = (adminView = false) =>
   queryOptions({
     queryKey: ["products", adminView],
     queryFn: async (): Promise<DbProduct[]> => {
-      let request = supabase.from("products").select("*").order("sort_order", { ascending: true });
+      let request = supabase
+        .from("products")
+        .select("*")
+        .order("sort_order", { ascending: true });
+
       if (!adminView) request = request.eq("is_visible", true);
+
       const { data, error } = await request;
       if (error) throw error;
       return (data ?? []) as DbProduct[];
@@ -57,8 +62,13 @@ export const photosQuery = (adminView = false) =>
   queryOptions({
     queryKey: ["gallery_photos", adminView],
     queryFn: async (): Promise<DbPhoto[]> => {
-      let request = supabase.from("gallery_photos").select("*").order("sort_order", { ascending: true });
+      let request = supabase
+        .from("gallery_photos")
+        .select("*")
+        .order("sort_order", { ascending: true });
+
       if (!adminView) request = request.eq("is_visible", true);
+
       const { data, error } = await request;
       if (error) throw error;
       return (data ?? []) as DbPhoto[];
@@ -69,8 +79,13 @@ export const videosQuery = (adminView = false) =>
   queryOptions({
     queryKey: ["videos", adminView],
     queryFn: async (): Promise<DbVideo[]> => {
-      let request = supabase.from("videos").select("*").order("sort_order", { ascending: true });
+      let request = supabase
+        .from("videos")
+        .select("*")
+        .order("sort_order", { ascending: true });
+
       if (!adminView) request = request.eq("is_visible", true);
+
       const { data, error } = await request;
       if (error) throw error;
       return (data ?? []) as DbVideo[];
@@ -81,8 +96,13 @@ export const postsQuery = (adminView = false) =>
   queryOptions({
     queryKey: ["posts", adminView],
     queryFn: async (): Promise<DbPost[]> => {
-      let request = supabase.from("posts").select("*").order("published_at", { ascending: false });
+      let request = supabase
+        .from("posts")
+        .select("*")
+        .order("published_at", { ascending: false });
+
       if (!adminView) request = request.eq("is_published", true);
+
       const { data, error } = await request;
       if (error) throw error;
       return (data ?? []) as DbPost[];

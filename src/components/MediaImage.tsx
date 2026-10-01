@@ -11,12 +11,26 @@ type Props = {
   height?: number | undefined;
 };
 
-export function MediaImage({ path, fallback, alt, className, objectPosition, loading = "lazy", width, height }: Props) {
+export function MediaImage({
+  path,
+  fallback,
+  alt,
+  className,
+  objectPosition,
+  loading = "lazy",
+  width,
+  height,
+}: Props) {
   const resolved = useMediaUrl(path);
   const src = resolved ?? fallback;
 
   if (!src) {
-    return <div className={`bg-muted ${className ?? ""}`} aria-hidden="true" />;
+    return (
+      <div
+        className={`bg-muted/70 ${className ?? ""}`}
+        aria-hidden="true"
+      />
+    );
   }
 
   return (
@@ -26,7 +40,7 @@ export function MediaImage({ path, fallback, alt, className, objectPosition, loa
       loading={loading}
       width={width}
       height={height}
-      className={className}
+      className={`block ${className ?? ""}`}
       style={objectPosition ? { objectPosition } : undefined}
     />
   );
