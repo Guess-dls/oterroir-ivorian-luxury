@@ -3,8 +3,8 @@
 Créer un site vitrine premium, moderne et élégant pour « O’TERROIR by Stéphanie », valorisant les produits locaux et artisanaux de Côte d'Ivoire.
 
 Contact & WhatsApp :
-- Téléphone : 07 49 93 92 67 (format international +225 07 49 93 92 67 pour WhatsApp / tel:)
-- Email : zelyagoh@gmail.com
+- Téléphone : 07 98 18 84 12 (format international +225 07 98b18n84n12 pour WhatsApp / tel:)
+- Email : terroirivoireci@gmail.com
 - Numéro WhatsApp configuré sur tous les CTA et bouton flottant permanent avec messages préremplis ("Bonjour O’TERROIR by Stéphanie 👋 Je souhaite avoir des informations sur vos produits." ou message personnalisé par produit).
 
 Direction artistique & Style :
