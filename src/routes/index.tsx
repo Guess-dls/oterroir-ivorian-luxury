@@ -43,9 +43,9 @@ const BRAND_NAME = "O’TERROIR";
 const BRAND_SUBTITLE = "by Stéphanie";
 const BRAND_SLOGAN = "Le goût authentique de notre terroir.";
 
-const WHATSAPP = "2250798188412";
-const PHONE = "+2250798188412";
-const EMAIL = "terroirivoireci@gmail.com";
+const WHATSAPP = "2250749939267";
+const PHONE = "+2250749939267";
+const EMAIL = "zelyagoh@gmail.com";
 
 const DEFAULT_MESSAGE =
   "Bonjour O’TERROIR by Stéphanie 👋 Je souhaite avoir des informations sur vos produits.";
